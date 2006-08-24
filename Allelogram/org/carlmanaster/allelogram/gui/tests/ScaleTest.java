@@ -45,5 +45,14 @@ public class ScaleTest extends TestCase {
 			assertEquals("Empty range in Scale constructor", e.getMessage());
 		}
 	}
+	
+	public void testNegativeRanges() throws Exception {
+		scale = new Scale(1.0, 0.0, 0, 100);
+		assertEquals(90, scale.toScreen(0.1));
+		assertEquals(0.1, scale.toData(90), 0.02);
+		scale = new Scale(0.0, 1.0, 100, 0);
+		assertEquals(90, scale.toScreen(0.1));
+		assertEquals(0.1, scale.toData(90), 0.02);
+	}
 
 }
