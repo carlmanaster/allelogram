@@ -30,5 +30,20 @@ public class ScaleTest extends TestCase {
 			assertEquals(x, scale.toData(scale.toScreen(x)), 0.02);
 		}
 	}
+	
+	public void testThrowsOnEmptyRange() throws Exception {
+		try {
+			new Scale(0, 0, 0, 100);
+			fail();
+		} catch (Exception e) {
+			assertEquals("Empty range in Scale constructor", e.getMessage());
+		}
+		try {
+			new Scale(0, 1.0, 0, 0);
+			fail();
+		} catch (Exception e) {
+			assertEquals("Empty range in Scale constructor", e.getMessage());
+		}
+	}
 
 }

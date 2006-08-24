@@ -6,7 +6,9 @@ public class Scale {
 	private final double nLo;
 	private final double nHi;
 
-	public Scale(double xLo, double xHi, int nLo, int nHi) {
+	public Scale(double xLo, double xHi, int nLo, int nHi) throws Exception {
+		if (xHi == xLo) throw new Exception("Empty range in Scale constructor");
+		if (nHi == nLo) throw new Exception("Empty range in Scale constructor");
 		this.xLo = xLo;
 		this.xHi = xHi;
 		this.nLo = nLo;
