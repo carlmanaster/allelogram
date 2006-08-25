@@ -37,6 +37,13 @@ public class Genotype {
 		if (!this.fields.equals(that.fields))		return false;
 		return true;
 	}
+	
+	public int hashCode() {
+		int hash = 1;
+		hash = hash * 31 + fields.hashCode();
+		hash = hash * 31 + getRawAlleleValues(alleles.size()).hashCode();
+		return hash;
+	}
 
 	public boolean isHomozygous() {
 		HashSet<Double> set = new HashSet<Double>();
