@@ -24,4 +24,11 @@ public class Classification {
 		if (!this.columns.equals(that.columns))	return false;
 		return true;
 	}
+	
+	public int hashCode() {
+		int hash = 1;
+		hash = hash * 31 + name.hashCode();
+		hash = hash * 31 + columns.hashCode();
+		return hash;
+	}
 }
