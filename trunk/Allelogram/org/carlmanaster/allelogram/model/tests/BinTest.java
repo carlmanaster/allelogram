@@ -29,4 +29,8 @@ public class BinTest extends TestCase {
 		assertTrue(bin.contains(alleles.get(0)));
 		assertFalse(bin.contains(alleles.get(1)));
 	}
+	
+	public void testToString() throws Exception {
+		assertEquals("(0.0, 1.0)", bin.toString());
+	}
 }

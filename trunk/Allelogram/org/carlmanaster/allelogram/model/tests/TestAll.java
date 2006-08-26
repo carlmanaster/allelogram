@@ -12,6 +12,7 @@ public class TestAll extends TestSuite{
 		suite.addTestSuite(GenotypeComparatorTest.class);
 		suite.addTestSuite(GenotypeClassificationPredicateTest.class);
 		suite.addTestSuite(BinTest.class);
+		suite.addTestSuite(BinGuesserTest.class);
 		
 		return suite;
 	}
