@@ -45,6 +45,10 @@ public class Genotype {
 		return hash;
 	}
 
+	public ArrayList<Allele> getAlleles() {
+		return alleles;
+	}
+	
 	public boolean isHomozygous() {
 		HashSet<Double> set = new HashSet<Double>();
 		List<Double> values = getRawAlleleValues(2);
@@ -98,4 +102,5 @@ public class Genotype {
 			
 		return sb.toString();
 	}
+
 }
