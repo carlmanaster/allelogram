@@ -20,4 +20,8 @@ public class ClassificationTest extends TestCase {
 		Classification c4 = new Classification("x", new String[]{"b", "a"});
 		assertFalse(c1.equals(c4));
 	}
+	public void testToString() throws Exception {
+		Classification c = new Classification("name", new String[]{"a", "b"});
+		assertEquals("name:a,b", c.toString());
+	}
 }

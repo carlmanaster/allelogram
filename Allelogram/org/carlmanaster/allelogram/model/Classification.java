@@ -31,4 +31,14 @@ public class Classification {
 		hash = hash * 31 + columns.hashCode();
 		return hash;
 	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append(name);
+		sb.append(":");
+		for (String column : columns)
+			sb.append(column + ",");
+		sb.deleteCharAt(sb.length() - 1);
+		return sb.toString();
+	}
 }
