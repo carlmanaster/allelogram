@@ -19,14 +19,14 @@ public class GenotypeComparatorTest extends TestCase {
 		genotypes.add(g2);
 		genotypes.add(g3);
 		
-		Classification c1 = new Classification("x", new String[]{"a", "b"});
+		Classification c1 = new Classification(new String[]{"a", "b"});
 		GenotypeComparator comparator = new GenotypeComparator(c1);
 		Collections.sort(genotypes, comparator);
 		assertEquals(g2, genotypes.get(0));
 		assertEquals(g1, genotypes.get(1));
 		assertEquals(g3, genotypes.get(2));
 
-		c1 = new Classification("y", new String[]{"b", "a"});
+		c1 = new Classification(new String[]{"b", "a"});
 		comparator = new GenotypeComparator(c1);
 		Collections.sort(genotypes, comparator);
 		assertEquals(g2, genotypes.get(0));

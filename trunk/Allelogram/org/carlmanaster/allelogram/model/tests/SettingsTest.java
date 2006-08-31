@@ -1,5 +1,7 @@
 package org.carlmanaster.allelogram.model.tests;
 
+import java.util.HashMap;
+
 import junit.framework.TestCase;
 
 import org.carlmanaster.allelogram.model.Classification;
@@ -48,9 +50,9 @@ public class SettingsTest extends TestCase {
 		assertEquals("a", settings.getColumns().get(0));
 	}
     public void testClassifications() throws Exception {
-    		for (Classification classification : settings.getClassifications())
-    			System.err.println(classification);
-		assertEquals(2, settings.getClassifications().size());
+    		HashMap<String, Classification> classifications = settings.getClassifications();
+		assertEquals(2, classifications.size());
+		assertEquals("a-b", classifications.get("AB").toString());
 	}
     
     // test presence of required labels
