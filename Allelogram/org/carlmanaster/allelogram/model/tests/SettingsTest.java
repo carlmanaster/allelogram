@@ -1,6 +1,7 @@
 package org.carlmanaster.allelogram.model.tests;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -36,8 +37,7 @@ public class SettingsTest extends TestCase {
     private Settings settings;
     
     protected void setUp() throws Exception {
-		String s = "columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort";
-		settings = new Settings(s);
+		settings = new Settings(SETTINGS_STRING);
 	}
     
 	public void testStripComments() throws Exception {
@@ -54,7 +54,25 @@ public class SettingsTest extends TestCase {
 		assertEquals(2, classifications.size());
 		assertEquals("a-b", classifications.get("AB").toString());
 	}
+    public void testSort() throws Exception {
+		assertEquals("a-b", settings.getSortClassification().toString());
+	}
+    public void testColorBy() throws Exception {
+		assertEquals("b.c", settings.getColorByClassification().toString());
+	}
+    public void testInfo() throws Exception {
+   		Vector<Classification> classifications = settings.getInfoClassifications();
+		assertEquals(2, classifications.size());
+		assertEquals("b.c", classifications.get(0).toString());
+		assertEquals("a-b", classifications.get(1).toString());
+	}
+    public void testModifierClickClassifications() throws Exception {
+    		assertEquals("a-b", settings.getOptionClickClassification().toString());
+    		assertEquals("b.c", settings.getCommandClickClassification().toString());
+	}
     
+    private static final String SETTINGS_STRING = 
+    	"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\n\n";
     // test presence of required labels
     // test order of required labels
     // test columns exist for each classification
