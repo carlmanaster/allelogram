@@ -12,6 +12,8 @@ public class Settings {
 	private final Vector<Classification> infoClassifications = new Vector<Classification>();
 	private final Classification optionClickClassification;
 	private final Classification commandClickClassification;
+	private final Classification controlClassification;
+	private final GenotypeClassificationPredicate controlSubject;
 
     public Settings(String s) throws Exception {
     		ArrayList<String> lines = new ArrayList<String>();
@@ -26,6 +28,14 @@ public class Settings {
     		int clickStart			= lines.indexOf("click") + 1;
     		int controlLine			= lines.indexOf("control") + 1;
     		
+    		if (columnStart < 1)						throw new Exception("Settings must contain a 'columns' section.");
+    		if (classificationStart < columnStart)		throw new Exception("Settings must contain a 'classifications' section after the 'columns' section.");
+    		if (sortLine < classificationStart)		throw new Exception("Settings must contain a 'sort' section after the 'classifications' section.");
+    		if (colorByLine < sortLine)				throw new Exception("Settings must contain a 'color' section after the 'sort' section.");
+    		if (infoStart < colorByLine)				throw new Exception("Settings must contain an 'info' section after the 'color' section.");
+    		if (clickStart < infoStart)				throw new Exception("Settings must contain a 'click' section after the 'info' section.");
+    		if (controlLine < clickStart)				throw new Exception("Settings must contain a 'control' section after the 'click' section.");
+
     		for (int i = columnStart; i < classificationStart - 1; ++i)
     			columns.add(lines.get(i));
     		
@@ -44,6 +54,15 @@ public class Settings {
     		int n = clicks.size();
     		optionClickClassification		= n < 1 ? null : classifications.get(clicks.get(0));
     		commandClickClassification	= n < 2 ? null : classifications.get(clicks.get(1));
+    		
+    		String[] terms = lines.get(controlLine).split(":");
+    		if (terms.length == 2) {
+    			controlClassification = classifications.get(terms[0]);
+    			controlSubject = new GenotypeClassificationPredicate(controlClassification, controlClassification.parse(terms[1]));
+    		} else {
+    			controlClassification = null;
+    			controlSubject = null;
+    		}
 	}
 
 	private void addClassification(String string) throws Exception {
@@ -66,5 +85,9 @@ public class Settings {
 	public Vector<Classification> getInfoClassifications()			{return infoClassifications;}
 	public Classification getOptionClickClassification()			{return optionClickClassification;}
 	public Classification getCommandClickClassification()			{return commandClickClassification;}
+
+	public boolean isControlSubject(Genotype control) {
+		return controlSubject.passes(control);
+	}
 
 }

@@ -40,7 +40,6 @@ public class Classification {
 				this.columns.add(column);
 				s = s.substring(column.length()); 
 				if (s.length() > 0) {
-					System.err.println("|" + s + "|");
 					this.delimiters.add(s.substring(0, 1));
 					s = s.substring(1);
 				}
@@ -77,5 +76,17 @@ public class Classification {
 		}
 		
 		return sb.toString();
+	}
+
+	public String[] parse(String string) {
+		String s = string.trim();
+		String[] result = new String[columns.size()];
+		for (int i = 0; i < delimiters.size() - 1; ++i) {
+			int n = s.indexOf(delimiters.get(i));
+			result[i] = s.substring(0, n);
+			s = s.substring(n + 1);
+		}
+		result[result.length - 1] = s;
+		return result;
 	}
 }
