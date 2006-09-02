@@ -45,7 +45,8 @@ public class GenotypeTest extends TestCase {
 		} catch (Exception e) {
 		}
 		try {
-			new Genotype(alleles, null, values);	fail();
+			String[] noKeys = null;
+			new Genotype(alleles, noKeys, values);	fail();
 		} catch (Exception e) {
 		}
 		try {

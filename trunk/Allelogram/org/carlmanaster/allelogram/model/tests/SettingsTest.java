@@ -6,6 +6,7 @@ import java.util.Vector;
 import junit.framework.TestCase;
 
 import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Genotype;
 import org.carlmanaster.allelogram.model.Settings;
 
 /*
@@ -34,6 +35,7 @@ import org.carlmanaster.allelogram.model.Settings;
  */
 
 public class SettingsTest extends TestCase {
+    private static final String SETTINGS_STRING = "columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n";
     private Settings settings;
     
     protected void setUp() throws Exception {
@@ -70,11 +72,38 @@ public class SettingsTest extends TestCase {
     		assertEquals("a-b", settings.getOptionClickClassification().toString());
     		assertEquals("b.c", settings.getCommandClickClassification().toString());
 	}
-    
-    private static final String SETTINGS_STRING = 
-    	"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\n\n";
-    // test presence of required labels
-    // test order of required labels
-    // test columns exist for each classification
+    public void testControlSubject() throws Exception {
+		double[] alleles = new double[]{0,1};
+		Genotype control = new Genotype(alleles, settings.getColumns(), new String[]{"x", "y", "z"});
+		assertTrue(settings.isControlSubject(control));
+		Genotype g = new Genotype(alleles, settings.getColumns(), new String[]{"t", "y", "z"});
+		assertFalse(settings.isControlSubject(g));
+	}
+    public void testRequiredLabelsArePresent() throws Exception {
+    		String[] bad = new String[] {
+    				"*olumns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\n*lassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\n*ort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\n*olor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\n*nfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\n*lick\nAB\nBC\ncontrol\nAB: x-y\n",
+    				"columns\na!comment\nb\nc\nclassifications\nAB:a-b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\n*ontrol\nAB: x-y\n",
+    		};
+    		for (String string : bad) {
+    			try {
+    				new Settings(string);
+    				fail();
+    			} catch (Exception e) {
+    			}
+    		}
+	}
+    public void testValidClassifications() throws Exception {
+		try {
+			new Settings("columns\na!comment\nb\nc\nclassifications\nAB:a-z\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x-y\n");
+			fail();
+		} catch (Exception e) {
+		}
+		
+	}
     
 }

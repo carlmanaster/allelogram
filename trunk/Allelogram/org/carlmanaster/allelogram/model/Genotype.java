@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Vector;
 
 public class Genotype {
 	private final ArrayList<Allele> alleles = new ArrayList<Allele>();
@@ -28,6 +29,10 @@ public class Genotype {
 			fields.put(keys[i], values[i]);
 	}
 	
+	public Genotype(double[] alleles, Vector<String> keys, String[] values) throws Exception{
+		this(alleles, keys.toArray(new String[keys.size()]), values);
+	}
+
 	public boolean equals(Object obj) {
 		if (obj == null)					return false;
 		if (obj == this)					return true;
