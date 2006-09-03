@@ -55,7 +55,7 @@ public class Settings {
     		optionClickClassification		= n < 1 ? null : classifications.get(clicks.get(0));
     		commandClickClassification	= n < 2 ? null : classifications.get(clicks.get(1));
     		
-    		String[] terms = lines.get(controlLine).split(":");
+    		String[] terms = Util.splitOnColon(lines.get(controlLine));
     		if (terms.length == 2) {
     			controlClassification = classifications.get(terms[0]);
     			controlSubject = new GenotypeClassificationPredicate(controlClassification, controlClassification.parse(terms[1]));
@@ -64,9 +64,9 @@ public class Settings {
     			controlSubject = null;
     		}
 	}
-
+    
 	private void addClassification(String string) throws Exception {
-		String[] terms = string.split(":");
+		String[] terms = Util.splitOnColon(string);
 		String name = terms[0];
 		classifications.put(name, new Classification(this.columns, terms[1]));
 	}
