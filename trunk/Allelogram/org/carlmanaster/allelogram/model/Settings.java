@@ -85,9 +85,6 @@ public class Settings {
 	public Vector<Classification> getInfoClassifications()			{return infoClassifications;}
 	public Classification getOptionClickClassification()			{return optionClickClassification;}
 	public Classification getCommandClickClassification()			{return commandClickClassification;}
-
-	public boolean isControlSubject(Genotype control) {
-		return controlSubject.passes(control);
-	}
+	public boolean isControlSubject(Genotype control)				{return controlSubject.passes(control);}
 
 }

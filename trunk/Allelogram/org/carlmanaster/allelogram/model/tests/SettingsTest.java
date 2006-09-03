@@ -103,7 +103,6 @@ public class SettingsTest extends TestCase {
 			fail();
 		} catch (Exception e) {
 		}
-		
 	}
     
 }
