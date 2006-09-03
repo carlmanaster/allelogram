@@ -1,8 +1,11 @@
 package org.carlmanaster.allelogram.model;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+
+import org.carlmanaster.allelogram.util.FileUtil;
 
 public class Settings {
 	private final Vector<String> columns = new Vector<String>();
@@ -14,6 +17,10 @@ public class Settings {
 	private final Classification commandClickClassification;
 	private final Classification controlClassification;
 	private final GenotypeClassificationPredicate controlSubject;
+
+	public Settings(BufferedReader reader) throws Exception {
+		this(FileUtil.readAll(reader));
+	}
 
     public Settings(String s) throws Exception {
     		ArrayList<String> lines = new ArrayList<String>();
@@ -37,7 +44,7 @@ public class Settings {
     		if (controlLine < clickStart)				throw new Exception("Settings must contain a 'control' section after the 'click' section.");
 
     		for (int i = columnStart; i < classificationStart - 1; ++i)
-    			columns.add(lines.get(i));
+    			columns.add(lines.get(i).trim());
     		
     		for (int i = classificationStart; i < sortLine - 1; ++i)
     			addClassification(lines.get(i));
