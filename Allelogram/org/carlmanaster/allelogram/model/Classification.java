@@ -78,7 +78,7 @@ public class Classification {
 		return sb.toString();
 	}
 
-	public String[] parse(String string) {
+	public String[] parse(String string) {	
 		String s = string.trim();
 		String[] result = new String[columns.size()];
 		for (int i = 0; i < delimiters.size() - 1; ++i) {

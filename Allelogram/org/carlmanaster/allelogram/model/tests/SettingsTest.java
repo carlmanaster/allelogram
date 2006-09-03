@@ -104,5 +104,8 @@ public class SettingsTest extends TestCase {
 		} catch (Exception e) {
 		}
 	}
-    
+    public void testAllowColonsAsDelimiters() throws Exception {
+    		Settings s = new Settings("columns\na!comment\nb\nc\nclassifications\nAB:a:b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x:y\n");
+    		assertEquals("a:b", s.getClassifications().get("AB").toString());
+	}
 }
