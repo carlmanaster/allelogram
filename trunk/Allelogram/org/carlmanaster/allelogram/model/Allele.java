@@ -32,4 +32,7 @@ public class Allele {
 	public double getRawValue() {return value;}
 	public double getAdjustedValue() {return genotype.adjusted(value);}
 
+	public String toString() {
+		return String.format("%2.2f", getAdjustedValue());
+	}
 }

@@ -1,21 +1,32 @@
 package org.carlmanaster.allelogram.gui.tests;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
+import org.carlmanaster.allelogram.model.Genotype;
+import org.carlmanaster.allelogram.model.GenotypeReader;
 import org.carlmanaster.allelogram.model.Settings;
 import org.carlmanaster.allelogram.util.FileUtil;
 
 public class ReadSettingsTest extends TestCase {
+	
 	public void testRead() throws Exception {
 		File file = FileUtil.pickFile();
 		if (file == null) return;
 		
-		BufferedReader reader = FileUtil.makeReader(file);
-		Settings settings = new Settings(reader);
-		System.err.println(settings.toString());
+		Settings settings = new Settings(file);
+		
+		file = FileUtil.pickFile();
+		if (file == null) return;
+		
+		GenotypeReader reader = new GenotypeReader(settings); 
+		ArrayList<Genotype> genotypes = reader.readGenotypes(file);
+
+		for (Genotype genotype : genotypes)
+			System.err.println(genotype.getAlleles().toString() + " " + genotype.isHomozygous());
 	}
+
 
 }

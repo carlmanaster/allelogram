@@ -29,6 +29,7 @@ public class FileUtil {
 		StringBuffer sb = new StringBuffer();
 		while (reader.ready())
 			sb.append(reader.readLine() + '\n');
+		reader.close();
 		return sb.toString();
 	}
 
