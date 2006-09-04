@@ -18,19 +18,25 @@ public class GenotypeReader {
 		alleleIndexes = settings.getAlleleIndexes();
 	}
 
-	public ArrayList<Genotype> readGenotypes(File file) throws IOException, Exception {
+	public ArrayList<Genotype> readGenotypes(File file) throws IOException {
 		BufferedReader reader = FileUtil.makeReader(file);
 		ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
 		while (reader.ready()) {
-			Genotype g = makeGenotype(reader.readLine());
-			if (g != null) 
-				genotypes.add(g);
+			Genotype genotype = makeGenotype(reader.readLine());
+			if (genotype != null) 
+				genotypes.add(genotype);
 		}
 		reader.close();
 		return genotypes;
 	}
 
-	private Genotype makeGenotype(String line) throws Exception {
+	/**
+	 * If the first allele is unreadable, something is wrong with the line;
+	 * this should happen in files that include a header row, for instance.
+	 * Subsequent alleles may be blank; these indicate a homozygote and for
+	 * our purposes they should acquire the value of the first allele.
+	 */
+	private Genotype makeGenotype(String line) {
 		String[] split = line.split("\t");
 		String[] items = new String[columns.size()];
 		Arrays.fill(items, "");
@@ -42,12 +48,14 @@ public class GenotypeReader {
 		if (alleles[0] < 0)
 			return null;
 		
-		for (int i = 1; i < alleleIndexes.length; ++i) {
-			String s = alleleIndexes[i] >= items.length ? "" : items[alleleIndexes[i]];
-			alleles[i] = parseDouble(s, alleles[0]);
-		}
+		for (int i = 1; i < alleleIndexes.length; ++i)
+			alleles[i] = parseDouble(items[alleleIndexes[i]], alleles[0]);
 		
-		return new Genotype(alleles, columns, items);
+		try {
+			return new Genotype(alleles, columns, items);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	private static double parseDouble(String s, double defaultValue) {
