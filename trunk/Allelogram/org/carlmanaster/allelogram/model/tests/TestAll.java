@@ -12,6 +12,7 @@ public class TestAll extends TestSuite{
         suite.addTestSuite(GenotypeComparatorTest.class);
         suite.addTestSuite(GenotypeTest.class);
         suite.addTestSuite(SettingsTest.class);
+        suite.addTestSuite(CircularListTest.class);
         return suite;
     }
 }
