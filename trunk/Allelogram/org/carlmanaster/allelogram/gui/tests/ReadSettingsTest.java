@@ -1,7 +1,7 @@
 package org.carlmanaster.allelogram.gui.tests;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -22,7 +22,7 @@ public class ReadSettingsTest extends TestCase {
 		if (file == null) return;
 		
 		GenotypeReader reader = new GenotypeReader(settings); 
-		ArrayList<Genotype> genotypes = reader.readGenotypes(file);
+		List<Genotype> genotypes = reader.readGenotypes(file);
 
 		for (Genotype genotype : genotypes)
 			System.err.println(genotype.getAlleles().toString() + " " + genotype.isHomozygous());
