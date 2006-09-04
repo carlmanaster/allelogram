@@ -1,8 +1,10 @@
 package org.carlmanaster.allelogram.model;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Vector;
 
 import org.carlmanaster.allelogram.util.FileUtil;
@@ -17,9 +19,10 @@ public class Settings {
 	private final Classification commandClickClassification;
 	private final Classification controlClassification;
 	private final GenotypeClassificationPredicate controlSubject;
+	private final Integer[] alleleIndexes;
 
-	public Settings(BufferedReader reader) throws Exception {
-		this(FileUtil.readAll(reader));
+	public Settings(File file) throws Exception {
+		this(FileUtil.readAll(FileUtil.makeReader(file)));
 	}
 
     public Settings(String s) throws Exception {
@@ -70,6 +73,13 @@ public class Settings {
     			controlClassification = null;
     			controlSubject = null;
     		}
+    		
+    		HashSet<Integer> set = new HashSet<Integer>();
+    		for (int i = 0; i < columns.size(); ++i)
+    			if (columns.get(i).toLowerCase().startsWith("allele"))
+    				set.add(i);
+    		alleleIndexes = set.toArray(new Integer[set.size()]);
+    		Arrays.sort(alleleIndexes);
 	}
     
 	private void addClassification(String string) throws Exception {
@@ -84,6 +94,47 @@ public class Settings {
             return line;
         return line.substring(0, commentStart).trim();
     }
+	
+//	public ArrayList<Genotype> readGenotypes(File file) throws IOException, Exception {
+//		BufferedReader reader = FileUtil.makeReader(file);
+//		ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
+//		while (reader.ready()) {
+//			String line = reader.readLine();
+//			Genotype g = makeGenotype(line);
+//			if (g != null) 
+//				genotypes.add(g);
+//		}
+//		return genotypes;
+//	}
+//
+//	private Genotype makeGenotype(String line) throws Exception {
+//		String[] split = line.split("\t");
+//		String[] items = new String[columns.size()];
+//		Arrays.fill(items, "");
+//		for (int i = 0; i < split.length; ++i)
+//			items[i] = split[i];
+//		double[] alleles = new double[alleleIndexes.length];
+//		
+//		alleles[0] = parseDouble(items[alleleIndexes[0]], -1.0);
+//		if (alleles[0] < 0)
+//			return null;
+//		
+//		for (int i = 1; i < alleleIndexes.length; ++i) {
+//			String s = alleleIndexes[i] >= items.length ? "" : items[alleleIndexes[i]];
+//			alleles[i] = parseDouble(s, alleles[0]);
+//		}
+//		
+//		return new Genotype(alleles, columns, items);
+//	}
+//	
+//	private static double parseDouble(String s, double defaultValue) {
+//		try {
+//			return Double.parseDouble(s);
+//		} catch (NumberFormatException e) {
+//			return defaultValue;
+//		}
+//	}
+
 
 	public Vector<String> getColumns()							{return columns;}
 	public HashMap<String, Classification> getClassifications()		{return classifications;}
@@ -93,5 +144,6 @@ public class Settings {
 	public Classification getOptionClickClassification()			{return optionClickClassification;}
 	public Classification getCommandClickClassification()			{return commandClickClassification;}
 	public boolean isControlSubject(Genotype control)				{return controlSubject.passes(control);}
+	public Integer[] getAlleleIndexes()							{return alleleIndexes;}
 
 }
