@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Vector;
+import java.util.List;
 
 import org.carlmanaster.allelogram.util.FileUtil;
 
 public class GenotypeReader {
-	private final Vector<String> columns;
+	private final List<String> columns;
 	private final Integer[] alleleIndexes;
 	
 	public GenotypeReader(Settings settings) {
@@ -18,7 +18,7 @@ public class GenotypeReader {
 		alleleIndexes = settings.getAlleleIndexes();
 	}
 
-	public ArrayList<Genotype> readGenotypes(File file) throws IOException {
+	public List<Genotype> readGenotypes(File file) throws IOException {
 		BufferedReader reader = FileUtil.makeReader(file);
 		ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
 		while (reader.ready()) {

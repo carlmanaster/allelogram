@@ -3,6 +3,7 @@ package org.carlmanaster.filter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.carlmanaster.predicate.Equals;
 import org.carlmanaster.predicate.Predicate;
@@ -17,7 +18,7 @@ public class Filter<T> {
 	public static <T> Filter<T> out(T t)				{return out(new Equals<T>(t));}
 	private Filter(Predicate<T> test)					{this.test = test;}
 
-	public ArrayList<T> filtered(Collection<T> list) {
+	public List<T> filtered(Collection<T> list) {
 		ArrayList<T> result = new ArrayList<T>();
 		for (T t : list) 
 			if (test.passes(t))
@@ -25,7 +26,7 @@ public class Filter<T> {
 		return result;
 	}
 
-	public  ArrayList<T> filtered(T[] array) {
+	public List<T> filtered(T[] array) {
 		return filtered(Arrays.asList(array));
 	}
 

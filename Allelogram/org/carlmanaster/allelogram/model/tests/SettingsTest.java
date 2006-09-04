@@ -1,7 +1,7 @@
 package org.carlmanaster.allelogram.model.tests;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -52,7 +52,7 @@ public class SettingsTest extends TestCase {
 		assertEquals("a", settings.getColumns().get(0));
 	}
     public void testClassifications() throws Exception {
-    		HashMap<String, Classification> classifications = settings.getClassifications();
+    		Map<String, Classification> classifications = settings.getClassifications();
 		assertEquals(2, classifications.size());
 		assertEquals("a-b", classifications.get("AB").toString());
 	}
@@ -63,7 +63,7 @@ public class SettingsTest extends TestCase {
 		assertEquals("b.c", settings.getColorByClassification().toString());
 	}
     public void testInfo() throws Exception {
-   		Vector<Classification> classifications = settings.getInfoClassifications();
+   		List<Classification> classifications = settings.getInfoClassifications();
 		assertEquals(2, classifications.size());
 		assertEquals("b.c", classifications.get(0).toString());
 		assertEquals("a-b", classifications.get(1).toString());

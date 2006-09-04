@@ -1,6 +1,7 @@
 package org.carlmanaster.allelogram.model.tests;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -12,21 +13,21 @@ public class BinGuesserTest extends TestCase {
 	public void testEmpty() throws Exception {
 		double[] d = new double[0];
 		BinGuesser guesser = new BinGuesser(d);
-		ArrayList<Bin> bins = guesser.guess(2);
+		List<Bin> bins = guesser.guess(2);
 		assertEquals(0, bins.size());
 	}
 	
 	public void testAlleleConstructor() throws Exception {
 		ArrayList<Allele> alleles = new ArrayList<Allele>();
 		BinGuesser guesser = new BinGuesser(alleles);
-		ArrayList<Bin> bins = guesser.guess(2);
+		List<Bin> bins = guesser.guess(2);
 		assertEquals(0, bins.size());
 	}
 
 	public void testOneBin() throws Exception {
 		double[] d = new double[] {10};
 		BinGuesser guesser = new BinGuesser(d);
-		ArrayList<Bin> bins = guesser.guess(2);
+		List<Bin> bins = guesser.guess(2);
 		assertEquals(1, bins.size());
 		assertEquals(new Bin(9, 11), bins.get(0));
 	}
@@ -40,7 +41,7 @@ public class BinGuesserTest extends TestCase {
 	public void testTwoBins() throws Exception {
 		double[] d = new double[] {10, 12};
 		BinGuesser guesser = new BinGuesser(d);
-		ArrayList<Bin> bins = guesser.guess(2);
+		List<Bin> bins = guesser.guess(2);
 		assertEquals(2, bins.size());
 		assertEquals(new Bin(9, 11), bins.get(0));
 		assertEquals(new Bin(11, 13), bins.get(1));
@@ -49,7 +50,7 @@ public class BinGuesserTest extends TestCase {
 	public void testThreeBins() throws Exception {
 		double[] d = new double[] {10, 14};
 		BinGuesser guesser = new BinGuesser(d);
-		ArrayList<Bin> bins = guesser.guess(2);
+		List<Bin> bins = guesser.guess(2);
 		assertEquals(3, bins.size());
 		assertEquals(new Bin(9, 11), bins.get(0));
 		assertEquals(new Bin(11, 13), bins.get(1));

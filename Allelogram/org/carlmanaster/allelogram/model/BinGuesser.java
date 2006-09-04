@@ -2,6 +2,7 @@ package org.carlmanaster.allelogram.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 public class BinGuesser {
@@ -13,13 +14,13 @@ public class BinGuesser {
 		Collections.sort(values);
 	}
 
-	public BinGuesser(ArrayList<Allele> alleles) {
+	public BinGuesser(List<Allele> alleles) {
 		for (Allele allele : alleles)
 			values.add(allele.getAdjustedValue());
 		Collections.sort(values);
 	}
 
-	public ArrayList<Bin> guess(double size) {
+	public List<Bin> guess(double size) {
 		if (values.size() == 0)
 			return new ArrayList<Bin>();
 		
