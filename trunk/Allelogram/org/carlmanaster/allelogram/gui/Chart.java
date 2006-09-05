@@ -17,6 +17,10 @@ public class Chart extends JPanel {
 	private Scale xScale;
 	private Scale yScale;
 	
+	public Chart() {
+		setBackground(Color.WHITE);
+	}
+	
 	public void paint(Graphics g) {
 		super.paint(g);
 		paintBins(g);
