@@ -52,11 +52,18 @@ public class MenuBarBuilder {
 				applet.doOpen();
 			}
 		});
-
 		open.setShortcut(new MenuShortcut(KeyEvent.VK_O, false));
 
+		MenuItem pickFileFormat = new MenuItem("Pick File Format");
+		pickFileFormat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.doPickFileFormat();
+			}
+		});
 		Menu menu = makeMenu("File");
 		menu.add(open);
+		menu.addSeparator();
+		menu.add(pickFileFormat);
 		return menu;
 	}
 	

@@ -128,5 +128,9 @@ public class AllelogramApplet extends Application {
 	public Settings getSettings() {
 		return settings;
 	}
+
+	public void doPickFileFormat() {
+		readSettings();		
+	}
 	
 }
