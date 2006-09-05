@@ -49,7 +49,7 @@ public class Settings {
     		if (controlLine < clickStart)				throw new Exception("Settings must contain a 'control' section after the 'click' section.");
 
     		for (int i = columnStart; i < classificationStart - 1; ++i)
-    			columns.add(lines.get(i).trim());
+    			columns.add(lines.get(i));
     		
     		for (int i = classificationStart; i < sortLine - 1; ++i)
     			addClassification(lines.get(i));
@@ -93,7 +93,7 @@ public class Settings {
 	public static String stripComments(String line) {
         int commentStart = line.indexOf('!');
         if (commentStart < 0)
-            return line;
+            return line.trim();
         return line.substring(0, commentStart).trim();
     }
 

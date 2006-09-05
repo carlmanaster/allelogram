@@ -20,4 +20,8 @@ public class Scale {
 
 	private double nWidth() {return nHi - nLo;}
 	private double xWidth() {return xHi - xLo;}
+	
+	public String toString() {
+		return String.format("%2.2f, %2.2f : %2.0f, %2.0f", xLo, xHi, nLo, nHi);
+	}
 }

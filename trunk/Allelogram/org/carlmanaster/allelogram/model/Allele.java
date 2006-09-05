@@ -35,4 +35,6 @@ public class Allele {
 	public String toString() {
 		return String.format("%2.2f", getAdjustedValue());
 	}
+
+	public Genotype getGenotype() {return genotype;}
 }
