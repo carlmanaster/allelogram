@@ -132,5 +132,10 @@ public class AllelogramApplet extends Application {
 	public void doPickFileFormat() {
 		readSettings();		
 	}
+
+	public void doClearBins() {
+		bins.clear();
+		repaint();
+	}
 	
 }
