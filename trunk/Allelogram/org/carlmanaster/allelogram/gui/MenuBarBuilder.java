@@ -85,7 +85,7 @@ public class MenuBarBuilder {
 	 * 
 	 */
 	private Menu buildBinMenu() {
-		MenuItem guess = new MenuItem("Guess");
+		MenuItem guess = new MenuItem("Guess Bins");
 		guess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				applet.doGuess();
@@ -93,8 +93,17 @@ public class MenuBarBuilder {
 		});
 		guess.setShortcut(new MenuShortcut(KeyEvent.VK_G, false));
 
+		MenuItem clear = new MenuItem("Clear Bins");
+		clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.doClearBins();
+			}
+		});
+
 		Menu menu = makeMenu("Bin");
 		menu.add(guess);
+		menu.addSeparator();
+		menu.add(clear);
 		return menu;
 	}
 	
