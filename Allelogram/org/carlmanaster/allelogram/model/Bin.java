@@ -39,4 +39,7 @@ public class Bin {
 	public String toString() {
 		return String.format("(%1.1f, %1.1f)", lo, hi);
 	}
+
+	public double getLow()	{return lo;}
+	public double getHigh()	{return hi;}
 }
