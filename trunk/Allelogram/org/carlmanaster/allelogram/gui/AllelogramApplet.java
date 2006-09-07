@@ -39,6 +39,9 @@ public class AllelogramApplet extends Application {
 		
 		getContentPane().setLayout(new Layout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(chart);
+		ChartClicker clicker = new ChartClicker(this, chart);
+		chart.addMouseListener(clicker);
+		chart.addMouseMotionListener(clicker);
 	}
 	
 	public void paint(Graphics g) {
@@ -138,6 +141,12 @@ public class AllelogramApplet extends Application {
 
 	public void doClearBins() {
 		bins.clear();
+		repaint();
+	}
+
+	public void selectGenotype(Genotype genotype) {
+		System.err.println(settings.info(genotype));
+		chart.hiliteGenotype(genotype);
 		repaint();
 	}
 	
