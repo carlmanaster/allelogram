@@ -108,4 +108,11 @@ public class Settings {
 	public boolean isControlSubject(Genotype control)			{return controlSubject.passes(control);}
 	public Integer[] getAlleleIndexes()						{return alleleIndexes;}
 
+	public String info(Genotype genotype) {
+		StringBuffer sb = new StringBuffer();
+		for (Classification classification : infoClassifications)
+			sb.append(classification.string(genotype) + "\n");
+		return sb.toString();
+	}
+
 }

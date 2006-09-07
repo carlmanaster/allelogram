@@ -97,4 +97,13 @@ public class Classification {
 			result.add(genotype.get(column));
 		return result;
 	}
+
+	public String string(Genotype genotype) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < columns.size(); ++i) {
+			sb.append(genotype.get(columns.get(i)));
+			sb.append(delimiters.get(i));
+		}
+		return sb.toString();
+	}
 }

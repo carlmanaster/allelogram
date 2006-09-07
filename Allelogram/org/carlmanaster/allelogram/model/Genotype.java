@@ -19,7 +19,7 @@ public class Genotype {
 		Arrays.sort(alleles);
 		
 		for (int i = 0; i < alleles.length; ++i)
-			this.alleles.add(new Allele(this, alleles[i], i));
+			this.alleles.add(new Allele(this, alleles[i]));
 	}
 
 	public Genotype(double[] alleles, String[] keys, String[] values) throws Exception {
@@ -30,23 +30,6 @@ public class Genotype {
 	
 	public Genotype(double[] alleles, List<String> keys, String[] values) throws Exception{
 		this(alleles, keys.toArray(new String[keys.size()]), values);
-	}
-
-	public boolean equals(Object obj) {
-		if (obj == null)					return false;
-		if (obj == this)					return true;
-		if (!(obj instanceof Genotype))	return false;
-		Genotype that = (Genotype) obj;
-		if (!this.alleles.equals(that.alleles))	return false;
-		if (!this.fields.equals(that.fields))		return false;
-		return true;
-	}
-	
-	public int hashCode() {
-		int hash = 1;
-		hash = hash * 31 + fields.hashCode();
-		hash = hash * 31 + getRawAlleleValues(alleles.size()).hashCode();
-		return hash;
 	}
 
 	public ArrayList<Allele> getAlleles() {

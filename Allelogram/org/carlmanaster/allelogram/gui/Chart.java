@@ -3,12 +3,16 @@ package org.carlmanaster.allelogram.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.JPanel;
 
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
+import org.carlmanaster.allelogram.model.Genotype;
 
 public class Chart extends JPanel {
 	private static final Color BIN_COLOR = Color.CYAN;
@@ -17,6 +21,7 @@ public class Chart extends JPanel {
 	private Scale xScale;
 	private Scale yScale;
 	private Colorizer colorizer = new Colorizer();
+	private final HashSet<Genotype> selection = new HashSet<Genotype>();
 	
 	public Chart() {
 		setBackground(Color.WHITE);
@@ -24,6 +29,7 @@ public class Chart extends JPanel {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
+		hiliteAlleles(g);
 		paintBins(g);
 		paintAlleles(g);
 	}
@@ -54,6 +60,26 @@ public class Chart extends JPanel {
 		g.drawLine(0, y, getWidth(), y);
 	}
 
+	private void hiliteAlleles(Graphics g) {
+		if (alleles == null)
+			return;
+		
+		g.setColor(Color.YELLOW);
+
+		for (Genotype genotype : selection) 
+			hiliteAlleles(g, genotype.getAlleles());
+	}
+
+	private void hiliteAlleles(Graphics g, ArrayList<Allele> selectedAlleles) {
+		for (Allele allele : selectedAlleles)
+			hiliteAllele(g, allele);
+	}
+
+	private void hiliteAllele(Graphics g, Allele allele) {
+		Point p = alleleLocation(allele, alleles.indexOf(allele));
+		g.fillRect(p.x-4, p.y-4, 10, 10);
+	}
+
 	private void paintAlleles(Graphics g) {
 		if (alleles == null)
 			return;
@@ -64,9 +90,14 @@ public class Chart extends JPanel {
 
 	private void paintAllele(Graphics g, Allele allele, int i) {
 		g.setColor(colorizer.colorFor(allele));
+		Point p = alleleLocation(allele, i);
+		g.fillRect(p.x, p.y, 2, 2);
+	}
+
+	private Point alleleLocation(Allele allele, int i) {
 		int x = xScale.toScreen(i);
 		int y = yScale.toScreen(allele.getAdjustedValue());
-		g.fillRect(x, y, 2, 2);
+		return new Point(x, y);
 	}
 
 	public void setAlleles(List<Allele> alleles)	{
@@ -105,5 +136,22 @@ public class Chart extends JPanel {
 
 	public void setColorizer(Colorizer colorizer) {
 		this.colorizer  = colorizer;
+	}
+
+	public Allele alleleAt(Point point) {
+		if (alleles == null)
+			return null;
+		for (int i = 0; i < alleles.size(); ++i) {
+			Allele allele = alleles.get(i);
+			Point p = alleleLocation(allele, i);
+			if (p.distance(point) < 4)
+				return allele;
+		}
+		return null;
+	}
+
+	public void hiliteGenotype(Genotype genotype) {
+		selection.clear();
+		selection .add(genotype);
 	}
 }

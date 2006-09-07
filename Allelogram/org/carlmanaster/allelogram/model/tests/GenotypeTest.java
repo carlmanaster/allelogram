@@ -54,23 +54,10 @@ public class GenotypeTest extends TestCase {
 		} catch (Exception e) {
 		}
 	}
-	public void testEquals() throws Exception {
-		Genotype g1 = new Genotype(new double[]{0,1});
-		Genotype g2 = new Genotype(new double[]{0,2});
-		Genotype g3 = new Genotype(new double[]{0,1});
-		assertFalse(g1.equals(g2));
-		assertTrue(g1.equals(g3));
-		Genotype g4 = makeGenotype("A", "B", "C", 0, 0);
-		Genotype g5 = makeGenotype("X", "B", "C", 0, 0);
-		assertFalse(g4.equals(g5));
-		
-//		force invoking hashCode() because the natural implementation tends toward infinite recursion:
-		assertFalse(g4.hashCode() == g5.hashCode());	
-	}
 	public void testAlleleOrderDoesntMatter() throws Exception {
 		Genotype g1 = new Genotype(new double[]{0,1});
 		Genotype g2 = new Genotype(new double[]{1,0});
-		assertTrue(g1.equals(g2));
+		assertTrue(g1.getAdjustedAlleleValues(2).equals(g2.getAdjustedAlleleValues(2)));
 	}
 	public void testGetRawAlleles() throws Exception {
 		getRawAllelesReturnsWhatItWasGiven(new double[]{0,0});
