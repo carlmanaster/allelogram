@@ -63,6 +63,7 @@ public class Settings {
     		ArrayList<String> clicks = new ArrayList<String>();
     		for (int i = clickStart; i < controlLine - 1; ++i)
     			clicks.add(lines.get(i));
+    		
     		int n = clicks.size();
     		optionClickClassification		= n < 1 ? null : classifications.get(clicks.get(0));
     		commandClickClassification	= n < 2 ? null : classifications.get(clicks.get(1));

@@ -21,10 +21,11 @@ public class Chart extends JPanel {
 	private Scale xScale;
 	private Scale yScale;
 	private Colorizer colorizer = new Colorizer();
-	private final HashSet<Genotype> selection = new HashSet<Genotype>();
+	private final HashSet<Genotype> selection;
 	
-	public Chart() {
+	public Chart(AllelogramApplet applet) {
 		setBackground(Color.WHITE);
+		selection = applet.getSelection();
 	}
 	
 	public void paint(Graphics g) {
