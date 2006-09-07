@@ -3,6 +3,7 @@ package org.carlmanaster.allelogram.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Vector;
 
 public class Classification {
 	private final ArrayList<String> columns	= new ArrayList<String>();
@@ -87,6 +88,13 @@ public class Classification {
 			s = s.substring(n + 1);
 		}
 		result[result.length - 1] = s;
+		return result;
+	}
+
+	public Vector<String> classify(Genotype genotype) {
+		Vector<String> result = new Vector<String>();
+		for (String column : columns) 
+			result.add(genotype.get(column));
 		return result;
 	}
 }

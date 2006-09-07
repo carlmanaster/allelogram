@@ -61,6 +61,7 @@ public class AllelogramApplet extends Application {
 			settings = new Settings(file);
 			comparator = new GenotypeComparator(settings.getSortClassification());
 			menuBarBuilder.extendSortMenu();
+			menuBarBuilder.extendColorMenu();
 		} catch (Exception e) {
 			System.err.println(e.toString());
 		}
@@ -108,6 +109,8 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void doColor(Classification classification) {
+		chart.setColorizer(new Colorizer(classification, genotypes));
+		repaint();
 	}
 
 
