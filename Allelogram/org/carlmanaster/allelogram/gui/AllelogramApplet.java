@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -16,10 +17,12 @@ import org.carlmanaster.allelogram.model.Bin;
 import org.carlmanaster.allelogram.model.BinGuesser;
 import org.carlmanaster.allelogram.model.Classification;
 import org.carlmanaster.allelogram.model.Genotype;
+import org.carlmanaster.allelogram.model.GenotypeClassificationPredicate;
 import org.carlmanaster.allelogram.model.GenotypeComparator;
 import org.carlmanaster.allelogram.model.GenotypeReader;
 import org.carlmanaster.allelogram.model.Settings;
 import org.carlmanaster.allelogram.util.FileUtil;
+import org.carlmanaster.filter.Filter;
 
 public class AllelogramApplet extends Application {
 	
@@ -27,8 +30,9 @@ public class AllelogramApplet extends Application {
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
 	private List<Bin> bins = new ArrayList<Bin>();
-	
-	private final Chart chart = new Chart();
+	private final HashSet<Genotype> selection = new HashSet<Genotype>();
+
+	private final Chart chart = new Chart(this);
 	private GenotypeComparator comparator = null; 
 
 	private final MenuBarBuilder menuBarBuilder = new MenuBarBuilder(this);
@@ -144,10 +148,36 @@ public class AllelogramApplet extends Application {
 		repaint();
 	}
 
-	public void selectGenotype(Genotype genotype) {
+	public void selectGenotype(Genotype genotype, boolean commandKey, boolean optionKey) {
+		if (optionKey && settings.getOptionClickClassification() != null) {
+			Classification classification = settings.getOptionClickClassification();
+			selectMatching(genotype, classification);
+			return;
+		}
+		if (commandKey && settings.getCommandClickClassification() != null) {
+			Classification classification = settings.getCommandClickClassification();
+			selectMatching(genotype, classification);
+			return;
+		}
 		System.err.println(settings.info(genotype));
-		chart.hiliteGenotype(genotype);
+		select(genotype);
+	}
+
+	private void selectMatching(Genotype genotype, Classification classification) {
+		GenotypeClassificationPredicate predicate = new GenotypeClassificationPredicate(classification, genotype);
+		selection.clear();
+		selection.addAll(Filter.in(predicate).filtered(genotypes));
 		repaint();
+	}
+
+	private void select(Genotype genotype) {
+		selection.clear();
+		selection .add(genotype);
+		repaint();
+	}
+
+	public HashSet<Genotype> getSelection() {
+		return selection;
 	}
 	
 }

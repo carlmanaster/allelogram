@@ -22,7 +22,15 @@ public class ChartClicker extends MouseAdapter implements MouseListener,
 		Allele allele = chart.alleleAt(event.getPoint());
 		if (allele == null)
 			return;
-		applet.selectGenotype(allele.getGenotype());
+		
+		boolean commandKey = isMac() ? event.isMetaDown() : event.isControlDown();
+		boolean optionKey = event.isAltDown();
+		
+		applet.selectGenotype(allele.getGenotype(), commandKey, optionKey);
+	}
+
+	private static boolean isMac() {
+		return System.getProperty("os.name").startsWith("Mac");
 	}
 	
 	public void mouseDragged(MouseEvent event) {
