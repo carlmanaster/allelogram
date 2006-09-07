@@ -172,6 +172,25 @@ public class MenuBarBuilder {
 		return menu;
 	}
 	
+	public void extendColorMenu() {
+		Menu menu = getMenu("Color");
+		
+		final Map<String, Classification> classifications = applet.getSettings().getClassifications();
+		ArrayList<String> names = new ArrayList<String>();
+		names.addAll(classifications.keySet());
+		Collections.sort(names);
+		for (final String name : names) {
+			MenuItem item = new MenuItem(name);
+			item.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					applet.doColor(classifications.get(name));
+				}
+			});
+			menu.add(item);
+		}
+		
+	}
+	
 	
 	
 

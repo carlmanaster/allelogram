@@ -16,6 +16,7 @@ public class Chart extends JPanel {
 	private List<Bin> bins;
 	private Scale xScale;
 	private Scale yScale;
+	private Colorizer colorizer = new Colorizer();
 	
 	public Chart() {
 		setBackground(Color.WHITE);
@@ -62,6 +63,7 @@ public class Chart extends JPanel {
 	}
 
 	private void paintAllele(Graphics g, Allele allele, int i) {
+		g.setColor(colorizer.colorFor(allele));
 		int x = xScale.toScreen(i);
 		int y = yScale.toScreen(allele.getAdjustedValue());
 		g.fillRect(x, y, 2, 2);
@@ -100,4 +102,8 @@ public class Chart extends JPanel {
 	}
 
 	public void setBins(List<Bin> bins)			{this.bins = bins;}
+
+	public void setColorizer(Colorizer colorizer) {
+		this.colorizer  = colorizer;
+	}
 }
