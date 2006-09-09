@@ -202,20 +202,15 @@ public class AllelogramApplet extends Application {
 		
 		double average = averageValue(controls);
 		
-		HashSet<Vector<String>> set = getAllClassificationResults(sortClassification);
-		for (Vector<String> vector : set) {
+		for (Vector<String> vector : getAllClassificationResults(sortClassification)) {
 			try {
-				GenotypeClassificationPredicate p = new GenotypeClassificationPredicate(sortClassification, vector);
-				
-				List<Genotype> theseControls = Filter.in(p.and(settings.getControlSubject())).filtered(genotypes);
+				List<Genotype> thisGroup		= Filter.in(new GenotypeClassificationPredicate(sortClassification, vector)).filtered(genotypes);
+				List<Genotype> theseControls	= Filter.in(settings.getControlSubject()).filtered(thisGroup);
 				if (theseControls.isEmpty())
 					continue;
 				double offset = average - averageValue(theseControls);
-				
-				List<Genotype> thisGroup = Filter.in(p).filtered(genotypes);
 				for (Genotype genotype : thisGroup) 
 					genotype.offsetBy(offset);
-
 			} catch (Exception e) {
 			}
 		}
