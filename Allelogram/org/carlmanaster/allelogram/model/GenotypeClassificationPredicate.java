@@ -26,7 +26,7 @@ public class GenotypeClassificationPredicate extends Predicate<Genotype> {
 	}
 
 	private static String[] columnsOf(Classification classification) {
-		return (String[]) classification.getColumns().toArray(new String[classification.getColumns().size()]);
+		return classification.getColumns().toArray(new String[classification.getColumns().size()]);
 	}
 	
 	private static String[] valuesOf(Genotype genotype, String[] columns) {
