@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class GenotypeComparator implements Comparator<Genotype> {
-	private final Classification classification;
+	private final Classifier classification;
 
-	public GenotypeComparator(Classification classification) {
+	public GenotypeComparator(Classifier classification) {
 		this.classification = classification;
 	}
 

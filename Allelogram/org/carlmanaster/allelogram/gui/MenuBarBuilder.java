@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 
 public class MenuBarBuilder {
 	private final AllelogramApplet applet;
@@ -141,7 +141,7 @@ public class MenuBarBuilder {
 	 * -------
 	 */
 	private Menu buildSortMenu() {
-		MenuItem sizeOnly = new MenuItem("Size Only");
+		MenuItem sizeOnly = new MenuItem("by Size Only");
 		sizeOnly.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				applet.doSort(null);
@@ -158,12 +158,12 @@ public class MenuBarBuilder {
 	public void extendSortMenu() {
 		Menu menu = getMenu("Sort");
 		
-		final Map<String, Classification> classifications = applet.getSettings().getClassifications();
+		final Map<String, Classifier> classifications = applet.getSettings().getClassifiers();
 		ArrayList<String> names = new ArrayList<String>();
 		names.addAll(classifications.keySet());
 		Collections.sort(names);
 		for (final String name : names) {
-			MenuItem item = new MenuItem(name);
+			MenuItem item = new MenuItem("by " + name);
 			item.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					applet.doSort(classifications.get(name));
@@ -204,12 +204,12 @@ public class MenuBarBuilder {
 	public void extendColorMenu() {
 		Menu menu = getMenu("Color");
 		
-		final Map<String, Classification> classifications = applet.getSettings().getClassifications();
+		final Map<String, Classifier> classifications = applet.getSettings().getClassifiers();
 		ArrayList<String> names = new ArrayList<String>();
 		names.addAll(classifications.keySet());
 		Collections.sort(names);
 		for (final String name : names) {
-			MenuItem item = new MenuItem(name);
+			MenuItem item = new MenuItem("by " + name);
 			item.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					applet.doColor(classifications.get(name));

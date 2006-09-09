@@ -1,27 +1,25 @@
 package org.carlmanaster.allelogram.model;
 
-import java.util.Vector;
-
 import org.carlmanaster.predicate.Predicate;
 
 public class GenotypeClassificationPredicate extends Predicate<Genotype> {
 	private final String[] values;
 	private final String[] columns;
 
-	public GenotypeClassificationPredicate(Classification classification, String[] values) throws Exception {
+	public GenotypeClassificationPredicate(Classifier classification, String[] values) throws Exception {
 		if (classification.getColumns().size() != values.length)
 			throw new Exception("values must have the same length as classification.");
 		this.columns = columnsOf(classification);
 		this.values = values;
 	}
 
-	public GenotypeClassificationPredicate(Classification classification, Genotype genotype) {
+	public GenotypeClassificationPredicate(Classifier classification, Genotype genotype) {
 		this.columns = columnsOf(classification);
 		this.values = valuesOf(genotype, columns);
 	}
 
-	public GenotypeClassificationPredicate(Classification classification, Vector<String> vector) throws Exception {
-		this(classification, vector.toArray(new String[vector.size()]));
+	public GenotypeClassificationPredicate(Classifier classifier, Classification classification) throws Exception {
+		this(classifier, classification.getStrings());
 	}
 
 	public boolean passes(Genotype genotype) {
@@ -31,7 +29,7 @@ public class GenotypeClassificationPredicate extends Predicate<Genotype> {
 		return true;
 	}
 
-	private static String[] columnsOf(Classification classification) {
+	private static String[] columnsOf(Classifier classification) {
 		return classification.getColumns().toArray(new String[classification.getColumns().size()]);
 	}
 	
