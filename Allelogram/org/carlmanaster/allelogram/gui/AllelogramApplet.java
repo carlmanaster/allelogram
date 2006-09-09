@@ -86,10 +86,15 @@ public class AllelogramApplet extends Application {
 			genotypes = reader.readGenotypes(file);
 			makeAlleles();
 			chart.setAlleles(alleles);
+			chart.setControlGenotypes(findControlGenotypes());
 			getWindow().setTitle(file.getName());
 			repaint();
 		} catch (IOException e) {
 		}
+	}
+
+	private List<Genotype> findControlGenotypes() {
+		return Filter.in(settings.getControlSubject()).filtered(genotypes);
 	}
 
 	private void makeAlleles() {

@@ -108,6 +108,7 @@ public class Settings {
 	public Classification getCommandClickClassification()		{return commandClickClassification;}
 	public boolean isControlSubject(Genotype control)			{return controlSubject.passes(control);}
 	public Integer[] getAlleleIndexes()						{return alleleIndexes;}
+	public GenotypeClassificationPredicate getControlSubject()	{return controlSubject;}
 
 	public String info(Genotype genotype) {
 		StringBuffer sb = new StringBuffer();
@@ -115,5 +116,6 @@ public class Settings {
 			sb.append(classification.string(genotype) + "\n");
 		return sb.toString();
 	}
+
 
 }
