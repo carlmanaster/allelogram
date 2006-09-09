@@ -3,7 +3,7 @@ package org.carlmanaster.allelogram.model.tests;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
 import org.carlmanaster.allelogram.model.GenotypeComparator;
 
@@ -19,14 +19,14 @@ public class GenotypeComparatorTest extends TestCase {
 		genotypes.add(g2);
 		genotypes.add(g3);
 		
-		Classification c1 = new Classification(new String[]{"a", "b"});
+		Classifier c1 = new Classifier(new String[]{"a", "b"});
 		GenotypeComparator comparator = new GenotypeComparator(c1);
 		Collections.sort(genotypes, comparator);
 		assertEquals(g2, genotypes.get(0));
 		assertEquals(g1, genotypes.get(1));
 		assertEquals(g3, genotypes.get(2));
 
-		c1 = new Classification(new String[]{"b", "a"});
+		c1 = new Classifier(new String[]{"b", "a"});
 		comparator = new GenotypeComparator(c1);
 		Collections.sort(genotypes, comparator);
 		assertEquals(g2, genotypes.get(0));

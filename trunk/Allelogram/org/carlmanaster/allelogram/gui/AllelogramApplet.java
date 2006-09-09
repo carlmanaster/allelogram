@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BoxLayout;
 
@@ -17,6 +16,7 @@ import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
 import org.carlmanaster.allelogram.model.BinGuesser;
 import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
 import org.carlmanaster.allelogram.model.GenotypeClassificationPredicate;
 import org.carlmanaster.allelogram.model.GenotypeComparator;
@@ -26,7 +26,6 @@ import org.carlmanaster.allelogram.util.FileUtil;
 import org.carlmanaster.filter.Filter;
 
 public class AllelogramApplet extends Application {
-	
 	private Settings settings;
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
@@ -37,7 +36,7 @@ public class AllelogramApplet extends Application {
 	private GenotypeComparator comparator = null; 
 
 	private final MenuBarBuilder menuBarBuilder = new MenuBarBuilder(this);
-	private Classification sortClassification;
+	private Classifier sortClassifier;
 	
 	public void init() {
 		super.init();
@@ -68,7 +67,7 @@ public class AllelogramApplet extends Application {
 		
 		try {
 			settings = new Settings(file);
-			comparator = new GenotypeComparator(settings.getSortClassification());
+			comparator = new GenotypeComparator(settings.getSortClassifier());
 			menuBarBuilder.extendSortMenu();
 			menuBarBuilder.extendColorMenu();
 		} catch (Exception e) {
@@ -90,7 +89,7 @@ public class AllelogramApplet extends Application {
 			chart.setAlleles(alleles);
 			chart.setControlGenotypes(findControlGenotypes());
 			getWindow().setTitle(file.getName());
-			doSort(settings.getSortClassification());
+			doSort(settings.getSortClassifier());
 			repaint();
 		} catch (IOException e) {
 		}
@@ -117,18 +116,18 @@ public class AllelogramApplet extends Application {
 		repaint();
 	}
 
-	public void doSort(Classification classification) {
+	public void doSort(Classifier classification) {
 		sortBy(classification);
 		repaint();
 	}
 
-	private void sortBy(Classification classification) {
-		sortClassification = classification;
+	private void sortBy(Classifier classification) {
+		sortClassifier = classification;
 		comparator = classification == null ? null : new GenotypeComparator(classification);
 		sortAlleles();
 	}
 
-	public void doColor(Classification classification) {
+	public void doColor(Classifier classification) {
 		chart.setColorizer(new Colorizer(classification, genotypes));
 		repaint();
 	}
@@ -161,13 +160,13 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void selectGenotype(Genotype genotype, boolean commandKey, boolean optionKey) {
-		if (optionKey && settings.getOptionClickClassification() != null) {
-			Classification classification = settings.getOptionClickClassification();
+		if (optionKey && settings.getOptionClickClassifier() != null) {
+			Classifier classification = settings.getOptionClickClassifier();
 			selectMatching(genotype, classification);
 			return;
 		}
-		if (commandKey && settings.getCommandClickClassification() != null) {
-			Classification classification = settings.getCommandClickClassification();
+		if (commandKey && settings.getCommandClickClassifier() != null) {
+			Classifier classification = settings.getCommandClickClassifier();
 			selectMatching(genotype, classification);
 			return;
 		}
@@ -175,7 +174,7 @@ public class AllelogramApplet extends Application {
 		select(genotype);
 	}
 
-	private void selectMatching(Genotype genotype, Classification classification) {
+	private void selectMatching(Genotype genotype, Classifier classification) {
 		GenotypeClassificationPredicate predicate = new GenotypeClassificationPredicate(classification, genotype);
 		selection.clear();
 		selection.addAll(Filter.in(predicate).filtered(genotypes));
@@ -193,7 +192,7 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void doAutonormalize() {
-		if (sortClassification == null)
+		if (sortClassifier == null)
 			return;
 		
 		List<Genotype> controls = findControlGenotypes();
@@ -202,9 +201,9 @@ public class AllelogramApplet extends Application {
 		
 		double average = averageValue(controls);
 		
-		for (Vector<String> vector : getAllClassificationResults(sortClassification)) {
+		for (Classification classification : getAllClassifications(sortClassifier)) {
 			try {
-				List<Genotype> thisGroup		= Filter.in(new GenotypeClassificationPredicate(sortClassification, vector)).filtered(genotypes);
+				List<Genotype> thisGroup		= Filter.in(new GenotypeClassificationPredicate(sortClassifier, classification)).filtered(genotypes);
 				List<Genotype> theseControls	= Filter.in(settings.getControlSubject()).filtered(thisGroup);
 				if (theseControls.isEmpty())
 					continue;
@@ -219,10 +218,10 @@ public class AllelogramApplet extends Application {
 		repaint();
 	}
 
-	private HashSet<Vector<String>> getAllClassificationResults(Classification classification) {
-		HashSet<Vector<String>> set = new HashSet<Vector<String>>();
+	private HashSet<Classification> getAllClassifications(Classifier classifier) {
+		HashSet<Classification> set = new HashSet<Classification>();
 		for (Genotype genotype : genotypes) 
-			set.add(classification.classify(genotype));
+			set.add(classifier.classify(genotype));
 		return set;
 	}
 
@@ -243,7 +242,7 @@ public class AllelogramApplet extends Application {
 	}
 
 	private void resort() {
-		sortBy(sortClassification);
+		sortBy(sortClassifier);
 	}
 
 	private void rescale() {

@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Vector;
 
-public class Classification {
+public class Classifier {
 	private final ArrayList<String> columns	= new ArrayList<String>();
 	private final ArrayList<String> delimiters	= new ArrayList<String>();
 
-	public Classification(String[] columns, String[] delimiters) {
+	public Classifier(String[] columns, String[] delimiters) {
 		for (String column : columns)
 			this.columns.add(column);
 		for (String delimiter : delimiters)
@@ -18,7 +18,7 @@ public class Classification {
 			this.delimiters.add("");
 	}
 	
-	public Classification(String[] columns) {
+	public Classifier(String[] columns) {
 		this(columns, new String[0]);
 	}
 
@@ -27,7 +27,7 @@ public class Classification {
 	 * must have the format <column><delimiter>...<column>,
 	 * and delimiters are exactly one character long.
 	 */
-	public Classification(Collection<String> columns, String string) throws Exception {
+	public Classifier(Collection<String> columns, String string) throws Exception {
 		ArrayList<String> list = new ArrayList<String>(columns);
 		Collections.sort(list);
 		Collections.reverse(list);
@@ -58,8 +58,8 @@ public class Classification {
 	public boolean equals(Object obj) {
 		if (obj == null)							return false;
 		if (obj == this)							return true;
-		if (!(obj instanceof Classification))		return false;
-		Classification that = (Classification) obj;
+		if (!(obj instanceof Classifier))		return false;
+		Classifier that = (Classifier) obj;
 		if (!this.columns.equals(that.columns))	return false;
 		return true;
 	}
@@ -91,11 +91,11 @@ public class Classification {
 		return result;
 	}
 
-	public Vector<String> classify(Genotype genotype) {
-		Vector<String> result = new Vector<String>();
+	public Classification classify(Genotype genotype) {
+		Vector<String> strings = new Vector<String>();
 		for (String column : columns) 
-			result.add(genotype.get(column));
-		return result;
+			strings.add(genotype.get(column));
+		return new Classification(strings);
 	}
 
 	public String string(Genotype genotype) {

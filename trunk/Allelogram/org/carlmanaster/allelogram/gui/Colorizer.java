@@ -10,19 +10,20 @@ import java.util.Vector;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.CircularList;
 import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
 
 public class Colorizer {
-	private final Classification classification;
+	private final Classifier classifier;
 	private final HashMap<Vector<String>, Color> index = new HashMap<Vector<String>, Color>();
 	
-	public Colorizer(Classification classification, List<Genotype> genotypes) {
-		this.classification = classification;
-		if (classification == null)
+	public Colorizer(Classifier classifier, List<Genotype> genotypes) {
+		this.classifier = classifier;
+		if (classifier == null)
 			return;
-		HashSet<Vector<String>> set = new HashSet<Vector<String>>();
+		HashSet<Classification> set = new HashSet<Classification>();
 		for (Genotype genotype : genotypes)
-			set.add(classification.classify(genotype));
+			set.add(classifier.classify(genotype));
 		
 		CircularList<Color> colors = makeColors();
 		
@@ -46,9 +47,9 @@ public class Colorizer {
 	}
 
 	public Color colorFor(Allele allele) {
-		if (classification == null)
+		if (classifier == null)
 			return Color.BLUE;
-		return index.get(classification.classify(allele.getGenotype()));
+		return index.get(classifier.classify(allele.getGenotype()));
 	}
 
 }

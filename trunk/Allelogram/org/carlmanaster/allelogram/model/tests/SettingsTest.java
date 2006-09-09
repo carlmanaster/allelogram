@@ -5,7 +5,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
 import org.carlmanaster.allelogram.model.Settings;
 
@@ -52,25 +52,25 @@ public class SettingsTest extends TestCase {
 		assertEquals("a", settings.getColumns().get(0));
 	}
     public void testClassifications() throws Exception {
-    		Map<String, Classification> classifications = settings.getClassifications();
+    		Map<String, Classifier> classifications = settings.getClassifiers();
 		assertEquals(2, classifications.size());
 		assertEquals("a-b", classifications.get("AB").toString());
 	}
     public void testSort() throws Exception {
-		assertEquals("a-b", settings.getSortClassification().toString());
+		assertEquals("a-b", settings.getSortClassifier().toString());
 	}
     public void testColorBy() throws Exception {
-		assertEquals("b.c", settings.getColorByClassification().toString());
+		assertEquals("b.c", settings.getColorByClassifier().toString());
 	}
     public void testInfo() throws Exception {
-   		List<Classification> classifications = settings.getInfoClassifications();
+   		List<Classifier> classifications = settings.getInfoClassifiers();
 		assertEquals(2, classifications.size());
 		assertEquals("b.c", classifications.get(0).toString());
 		assertEquals("a-b", classifications.get(1).toString());
 	}
     public void testModifierClickClassifications() throws Exception {
-    		assertEquals("a-b", settings.getOptionClickClassification().toString());
-    		assertEquals("b.c", settings.getCommandClickClassification().toString());
+    		assertEquals("a-b", settings.getOptionClickClassifier().toString());
+    		assertEquals("b.c", settings.getCommandClickClassifier().toString());
 	}
     public void testControlSubject() throws Exception {
 		double[] alleles = new double[]{0,1};
@@ -106,6 +106,6 @@ public class SettingsTest extends TestCase {
 	}
     public void testAllowColonsAsDelimiters() throws Exception {
     		Settings s = new Settings("columns\na!comment\nb\nc\nclassifications\nAB:a:b\nBC:b.c\nsort\nAB\ncolor\nBC\ninfo\nBC\nAB\nclick\nAB\nBC\ncontrol\nAB: x:y\n");
-    		assertEquals("a:b", s.getClassifications().get("AB").toString());
+    		assertEquals("a:b", s.getClassifiers().get("AB").toString());
 	}
 }
