@@ -210,8 +210,7 @@ public class AllelogramApplet extends Application {
 				List<Genotype> theseControls = Filter.in(p.and(settings.getControlSubject())).filtered(genotypes);
 				if (theseControls.isEmpty())
 					continue;
-				double thisAverage = averageValue(theseControls);
-				double offset = average - thisAverage;
+				double offset = average - averageValue(theseControls);
 				
 				List<Genotype> thisGroup = Filter.in(p).filtered(genotypes);
 				for (Genotype genotype : thisGroup) 
