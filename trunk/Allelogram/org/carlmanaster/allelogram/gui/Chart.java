@@ -135,6 +135,10 @@ public class Chart extends JPanel {
 		}
 		
 	}
+	
+	public void adjustScales() {
+		makeScales();
+	}
 
 	private double min() {
 		double min = Double.MAX_VALUE;

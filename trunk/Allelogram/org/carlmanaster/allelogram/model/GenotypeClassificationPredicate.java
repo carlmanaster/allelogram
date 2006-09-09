@@ -1,5 +1,7 @@
 package org.carlmanaster.allelogram.model;
 
+import java.util.Vector;
+
 import org.carlmanaster.predicate.Predicate;
 
 public class GenotypeClassificationPredicate extends Predicate<Genotype> {
@@ -16,6 +18,10 @@ public class GenotypeClassificationPredicate extends Predicate<Genotype> {
 	public GenotypeClassificationPredicate(Classification classification, Genotype genotype) {
 		this.columns = columnsOf(classification);
 		this.values = valuesOf(genotype, columns);
+	}
+
+	public GenotypeClassificationPredicate(Classification classification, Vector<String> vector) throws Exception {
+		this(classification, vector.toArray(new String[vector.size()]));
 	}
 
 	public boolean passes(Genotype genotype) {
