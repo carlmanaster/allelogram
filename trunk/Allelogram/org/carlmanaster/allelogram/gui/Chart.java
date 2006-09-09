@@ -17,6 +17,7 @@ import org.carlmanaster.allelogram.model.Genotype;
 public class Chart extends JPanel {
 	private static final Color BIN_COLOR = Color.CYAN;
 	private List<Allele> alleles;
+	private HashSet<Allele> controlAlleles = new HashSet<Allele>();
 	private List<Bin> bins;
 	private Scale xScale;
 	private Scale yScale;
@@ -33,6 +34,7 @@ public class Chart extends JPanel {
 		hiliteAlleles(g);
 		paintBins(g);
 		paintAlleles(g);
+		emphasizeControlAlleles(g);
 	}
 	
 	public Dimension getMinimumSize()		{return new Dimension(100, 100);}
@@ -77,7 +79,7 @@ public class Chart extends JPanel {
 	}
 
 	private void hiliteAllele(Graphics g, Allele allele) {
-		Point p = alleleLocation(allele, alleles.indexOf(allele));
+		Point p = alleleLocation(allele);
 		g.fillRect(p.x-4, p.y-4, 10, 10);
 	}
 
@@ -95,10 +97,25 @@ public class Chart extends JPanel {
 		g.fillRect(p.x, p.y, 2, 2);
 	}
 
+	private void emphasizeControlAlleles(Graphics g) {
+		g.setColor(Color.BLACK);
+		for (Allele allele : controlAlleles)
+			emphasizeControlAllele(g, allele);
+	}
+
+	private void emphasizeControlAllele(Graphics g, Allele allele) {
+		Point p = alleleLocation(allele);
+		g.drawLine(p.x - 5, p.y, p.x + 5, p.y);
+	}
+
 	private Point alleleLocation(Allele allele, int i) {
 		int x = xScale.toScreen(i);
 		int y = yScale.toScreen(allele.getAdjustedValue());
 		return new Point(x, y);
+	}
+
+	private Point alleleLocation(Allele allele) {
+		return alleleLocation(allele, alleles.indexOf(allele));
 	}
 
 	public void setAlleles(List<Allele> alleles)	{
@@ -153,6 +170,12 @@ public class Chart extends JPanel {
 
 	public void hiliteGenotype(Genotype genotype) {
 		selection.clear();
-		selection .add(genotype);
+		selection.add(genotype);
+	}
+
+	public void setControlGenotypes(List<Genotype> controlGenotypes) {
+		controlAlleles.clear();
+		for (Genotype genotype : controlGenotypes)
+			controlAlleles.addAll(genotype.getAlleles());
 	}
 }
