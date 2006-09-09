@@ -212,10 +212,8 @@ public class Chart extends JPanel {
 			repaint();
 			return;
 		} else {
-			double a = yScale.toData(end);
-			double b = yScale.toData(start);
 			try {
-				yScale = new Scale(a, b, getHeight(), 0);
+				yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight(), 0);
 			} catch (Exception e) {
 			}
 			repaint();
