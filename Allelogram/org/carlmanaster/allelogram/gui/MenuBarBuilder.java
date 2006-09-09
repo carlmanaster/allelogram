@@ -25,6 +25,7 @@ public class MenuBarBuilder {
 	public void buildMenuBar() {
 		menubar.add(buildFileMenu());
 		menubar.add(buildBinMenu());
+		menubar.add(buildNormalizeMenu());
 		menubar.add(buildSortMenu());
 		menubar.add(buildColorMenu());
 	}
@@ -102,6 +103,34 @@ public class MenuBarBuilder {
 
 		Menu menu = makeMenu("Bin");
 		menu.add(guess);
+		menu.addSeparator();
+		menu.add(clear);
+		return menu;
+	}
+	
+	/*
+	 * Auto-Normalize
+	 * --------------
+	 * Clear Normalization
+	 * 
+	 */
+	private Menu buildNormalizeMenu() {
+		MenuItem normalize = new MenuItem("Auto-Normalize");
+		normalize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.doAutonormalize();
+			}
+		});
+
+		MenuItem clear = new MenuItem("Clear Normalization");
+		clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.doClearNormalization();
+			}
+		});
+
+		Menu menu = makeMenu("Normalize");
+		menu.add(normalize);
 		menu.addSeparator();
 		menu.add(clear);
 		return menu;
