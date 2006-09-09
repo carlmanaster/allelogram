@@ -23,6 +23,8 @@ public class Chart extends JPanel {
 	private Scale yScale;
 	private Colorizer colorizer = new Colorizer();
 	private final HashSet<Genotype> selection;
+	private boolean zoomable;
+	private boolean autoscale = true;
 	
 	public Chart(AllelogramApplet applet) {
 		setBackground(Color.WHITE);
@@ -126,18 +128,25 @@ public class Chart extends JPanel {
 	private void makeScales() {
 		if (alleles == null)
 			return;
-		double min = min();
-		double max = max();
 		try {
 			xScale = new Scale(0, alleles.size(), 0, getWidth());
-			yScale = new Scale(min, max, getHeight(), 0);
+			fitYScaleToData();
 		} catch (Exception e) {
 		}
 		
 	}
+
+	private void fitYScaleToData() {
+		if (!autoscale)
+			return;
+		try {
+			yScale = new Scale(min(), max(), getHeight(), 0);
+		} catch (Exception e) {
+		}
+	}
 	
 	public void adjustScales() {
-		makeScales();
+		fitYScaleToData();
 	}
 
 	private double min() {
@@ -181,5 +190,35 @@ public class Chart extends JPanel {
 		controlAlleles.clear();
 		for (Genotype genotype : controlGenotypes)
 			controlAlleles.addAll(genotype.getAlleles());
+	}
+
+	public void drawZoomLine(int y) {
+		
+		Graphics g = getGraphics();
+		g.setXORMode(getBackground());
+		g.setColor(Color.BLACK);
+		drawHorizontalLine(g, y);
+		g.setPaintMode();
+	}
+
+	public void rejectZooms()		{zoomable = false;}
+	public boolean isZoomable()	{return zoomable;}
+	public void acceptZooms()		{zoomable = true;}
+
+	public void zoom(int start, int end) {
+		autoscale = start > end;
+		if (start > end) {
+			fitYScaleToData();
+			repaint();
+			return;
+		} else {
+			double a = yScale.toData(end);
+			double b = yScale.toData(start);
+			try {
+				yScale = new Scale(a, b, getHeight(), 0);
+			} catch (Exception e) {
+			}
+			repaint();
+		}
 	}
 }
