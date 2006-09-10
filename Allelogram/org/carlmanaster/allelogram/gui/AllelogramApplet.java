@@ -44,12 +44,10 @@ public class AllelogramApplet extends Application {
 		
 		getContentPane().setLayout(new Layout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(chart);
-		ChartClicker clicker = new ChartClicker(this, chart);
-		chart.addMouseListener(clicker);
 		
-		Zoomer zoomer = new Zoomer(chart);
-		chart.addMouseListener(zoomer);
-		chart.addMouseMotionListener(zoomer);
+		AllelogramMouseDispatcher mouseDispatcher = new AllelogramMouseDispatcher(this, chart);
+		chart.addMouseListener(mouseDispatcher);
+		chart.addMouseMotionListener(mouseDispatcher);
 	}
 	
 	public void paint(Graphics g) {
@@ -93,7 +91,6 @@ public class AllelogramApplet extends Application {
 			chart.setControlGenotypes(findControlGenotypes());
 			getWindow().setTitle(file.getName());
 			doSort(settings.getSortClassifier());
-			chart.acceptZooms();
 			repaint();
 		} catch (IOException e) {
 		}
