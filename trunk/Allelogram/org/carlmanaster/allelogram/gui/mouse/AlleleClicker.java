@@ -1,7 +1,8 @@
-package org.carlmanaster.allelogram.gui;
+package org.carlmanaster.allelogram.gui.mouse;
 
 import java.awt.event.MouseEvent;
 
+import org.carlmanaster.allelogram.gui.AllelogramApplet;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.util.PlatformUtil;
 

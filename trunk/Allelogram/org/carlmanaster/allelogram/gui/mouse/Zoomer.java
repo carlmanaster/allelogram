@@ -1,6 +1,8 @@
-package org.carlmanaster.allelogram.gui;
+package org.carlmanaster.allelogram.gui.mouse;
 
 import java.awt.event.MouseEvent;
+
+import org.carlmanaster.allelogram.gui.Chart;
 
 public class Zoomer extends ClickerDragger {
 	private final Chart chart;
