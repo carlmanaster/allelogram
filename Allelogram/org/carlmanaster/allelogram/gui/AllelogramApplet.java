@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 
+import org.carlmanaster.allelogram.gui.mouse.AllelogramMouseDispatcher;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
 import org.carlmanaster.allelogram.model.BinGuesser;

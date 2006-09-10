@@ -1,4 +1,4 @@
-package org.carlmanaster.allelogram.gui;
+package org.carlmanaster.allelogram.gui.mouse;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
