@@ -23,7 +23,6 @@ public class Chart extends JPanel {
 	private Scale yScale;
 	private Colorizer colorizer = new Colorizer();
 	private final HashSet<Genotype> selection;
-	private boolean zoomable;
 	private boolean autoscale = true;
 	
 	public Chart(AllelogramApplet applet) {
@@ -200,10 +199,6 @@ public class Chart extends JPanel {
 		drawHorizontalLine(g, y);
 		g.setPaintMode();
 	}
-
-	public void rejectZooms()		{zoomable = false;}
-	public boolean isZoomable()	{return zoomable;}
-	public void acceptZooms()		{zoomable = true;}
 
 	public void zoom(int start, int end) {
 		autoscale = start > end;
