@@ -1,8 +1,8 @@
 package org.carlmanaster.allelogram.model;
 
 public class Bin {
-	private final Double lo;
-	private final Double hi;
+	private Double lo;
+	private Double hi;
 
 	public Bin(double lo, double hi) {
 		this.lo = lo;
@@ -42,4 +42,7 @@ public class Bin {
 
 	public double getLow()	{return lo;}
 	public double getHigh()	{return hi;}
+
+	public void setLow(double d)	{lo = d;}
+	public void setHigh(double d)	{hi = d;}
 }
