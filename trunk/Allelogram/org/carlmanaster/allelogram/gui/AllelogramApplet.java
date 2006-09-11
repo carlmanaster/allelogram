@@ -41,7 +41,7 @@ public class AllelogramApplet extends Application {
 	
 	public void init() {
 		super.init();
-		setPreferredSize(new Dimension(300, 300));
+		setPreferredSize(new Dimension(700, 400));
 		
 		getContentPane().setLayout(new Layout(getContentPane(), BoxLayout.Y_AXIS));
 		getContentPane().add(chart);

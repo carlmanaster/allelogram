@@ -168,18 +168,6 @@ public class Chart extends JPanel {
 		this.colorizer  = colorizer;
 	}
 
-	public Allele alleleAt(Point point) {
-		if (alleles == null)
-			return null;
-		for (int i = 0; i < alleles.size(); ++i) {
-			Allele allele = alleles.get(i);
-			Point p = alleleLocation(allele, i);
-			if (p.distance(point) < 4)
-				return allele;
-		}
-		return null;
-	}
-
 	public void hiliteGenotype(Genotype genotype) {
 		selection.clear();
 		selection.add(genotype);
@@ -192,7 +180,6 @@ public class Chart extends JPanel {
 	}
 
 	public void drawZoomLine(int y) {
-		
 		Graphics g = getGraphics();
 		g.setXORMode(getBackground());
 		g.setColor(Color.BLACK);
@@ -214,4 +201,50 @@ public class Chart extends JPanel {
 			repaint();
 		}
 	}
+
+	public Allele alleleAt(Point point) {
+		if (alleles == null)
+			return null;
+		for (int i = 0; i < alleles.size(); ++i) {
+			Allele allele = alleles.get(i);
+			Point p = alleleLocation(allele, i);
+			if (p.distance(point) < 4)
+				return allele;
+		}
+		return null;
+	}
+
+	public BinBoundary binBoundaryAt(int v) {
+		if (bins == null)
+			return null;
+		Bin above = null;
+		Bin below = null;
+		int boundaryV = 0;
+		for (Bin bin : bins)
+			if (Math.abs(yScale.toScreen(bin.getLow()) - v) < 4) {
+				below = bin;
+				boundaryV = yScale.toScreen(bin.getLow());
+			}
+		for (Bin bin : bins)
+			if (Math.abs(yScale.toScreen(bin.getHigh()) - v) < 4) {
+				above = bin;
+				boundaryV = yScale.toScreen(bin.getHigh());
+			}
+		if (above == null && below == null)
+			return null;
+		return new BinBoundary(above, below, boundaryV);
+	}
+
+	public void drawBinLine(int y) {
+		Graphics g = getGraphics();
+		g.setXORMode(getBackground());
+		g.setColor(BIN_COLOR);
+		drawHorizontalLine(g, y);
+		g.setPaintMode();
+	}
+
+	public double toDataY(int v) {
+		return yScale.toData(v);
+	}
+	
 }
