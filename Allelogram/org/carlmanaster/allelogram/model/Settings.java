@@ -112,6 +112,10 @@ public class Settings {
 
 	public String info(Genotype genotype) {
 		StringBuffer sb = new StringBuffer();
+		ArrayList<Allele> alleles = genotype.getAlleles();
+		for (Allele allele : alleles)
+			sb.append (String.format("%1.1f ", allele.getAdjustedValue()));
+		sb.append('\n');
 		for (Classifier classifier : infoClassifiers)
 			sb.append(classifier.string(genotype) + "\n");
 		return sb.toString();
