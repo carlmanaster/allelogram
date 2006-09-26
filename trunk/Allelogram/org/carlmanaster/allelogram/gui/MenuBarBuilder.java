@@ -50,10 +50,18 @@ public class MenuBarBuilder {
 		MenuItem open = new MenuItem("Open");
 		open.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				applet.doOpen();
+				applet.doOpen(null,null);
 			}
 		});
 		open.setShortcut(new MenuShortcut(KeyEvent.VK_O, false));
+
+        MenuItem print = new MenuItem("Print");
+		print.addActionListener(new ActionListener() {
+		  public void actionPerformed(ActionEvent event) {
+		    applet.doPrint();
+		  }
+		});
+		print.setShortcut(new MenuShortcut(KeyEvent.VK_P, false));
 
 		MenuItem pickFileFormat = new MenuItem("Pick File Format");
 		pickFileFormat.addActionListener(new ActionListener() {
@@ -62,7 +70,8 @@ public class MenuBarBuilder {
 			}
 		});
 		Menu menu = makeMenu("File");
-		menu.add(open);
+        menu.add(open);
+		menu.add(print);
 		menu.addSeparator();
 		menu.add(pickFileFormat);
 		return menu;
