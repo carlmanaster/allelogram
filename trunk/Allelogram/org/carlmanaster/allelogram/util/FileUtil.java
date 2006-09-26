@@ -15,7 +15,9 @@ public class FileUtil {
 		FileDialog picker = new FileDialog(new Frame(), "", FileDialog.LOAD);
 		picker.setVisible(true);
 		try {
-			return new File(picker.getDirectory(), picker.getFile());
+			File file = new File(picker.getDirectory(), picker.getFile());
+			System.err.println(file.getAbsolutePath());
+			return file;
 		} catch (RuntimeException e) {
 			return null;
 		}
@@ -31,6 +33,10 @@ public class FileUtil {
 			sb.append(reader.readLine() + '\n');
 		reader.close();
 		return sb.toString();
+	}
+
+	public static File chooseFile(String settingsFile) {
+		return (settingsFile != null) ? new File(settingsFile) : pickFile();
 	}
 
 }
