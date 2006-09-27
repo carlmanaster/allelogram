@@ -165,22 +165,7 @@ public class MenuBarBuilder {
 	}
 	
 	public void extendSortMenu() {
-		Menu menu = getMenu("Sort");
-		
-		final Map<String, Classifier> classifications = applet.getSettings().getClassifiers();
-		ArrayList<String> names = new ArrayList<String>();
-		names.addAll(classifications.keySet());
-		Collections.sort(names);
-		for (final String name : names) {
-			MenuItem item = new MenuItem("by " + name);
-			item.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					applet.doSort(classifications.get(name));
-				}
-			});
-			menu.add(item);
-		}
-		
+		new SortMenuExtender().extend();
 	}
 	
 	private Menu getMenu(String name) {
@@ -211,25 +196,73 @@ public class MenuBarBuilder {
 	}
 	
 	public void extendColorMenu() {
-		Menu menu = getMenu("Color");
+		new ColorMenuExender().extend();
+	}
+	
+	private abstract class MenuExtender {
+		private final Menu menu;
+		protected final Map<String, Classifier> classifications;
+		private final ArrayList<String> names;
 		
-		final Map<String, Classifier> classifications = applet.getSettings().getClassifiers();
-		ArrayList<String> names = new ArrayList<String>();
-		names.addAll(classifications.keySet());
-		Collections.sort(names);
-		for (final String name : names) {
-			MenuItem item = new MenuItem("by " + name);
-			item.addActionListener(new ActionListener() {
+		public MenuExtender(String menuName) {
+			menu = getMenu(menuName);
+			classifications = applet.getSettings().getClassifiers();
+			names = new ArrayList<String>();
+			names.addAll(classifications.keySet());
+			Collections.sort(names);
+		}
+
+		public void extend() {
+			removeOldItems();
+			for (final String name : names) {
+				MenuItem item = makeItem(name);
+				item.addActionListener(makeListener(name));
+				menu.add(item);
+			}
+			
+		}
+
+		private void removeOldItems() {
+			// Leave the first item in place
+			for (int i = menu.getItemCount() - 1; i > 1; --i)
+				menu.remove(i);
+		}
+
+		protected abstract MenuItem makeItem(final String name);
+		protected abstract ActionListener makeListener(final String name);
+	}
+
+	private class SortMenuExtender extends MenuExtender {
+		SortMenuExtender() {
+			super("Sort");
+		}
+		protected MenuItem makeItem(final String name) {
+			return new MenuItem("by " + name);
+		}
+		protected ActionListener makeListener(final String name) {
+			return new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					applet.doSort(classifications.get(name));
+				}
+			};
+		}
+	}
+	
+	private class ColorMenuExender extends MenuExtender {
+		ColorMenuExender() {
+			super("Color");
+		}
+		protected MenuItem makeItem(String name) {
+			return new MenuItem("by " + name);
+		}
+		protected ActionListener makeListener(final String name) {
+			return new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
 					applet.doColor(classifications.get(name));
 				}
-			});
-			menu.add(item);
+			};
 		}
 		
 	}
-	
-	
-	
 
 }
