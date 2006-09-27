@@ -91,7 +91,7 @@ public class Chart extends JPanel {
 	}
 	
 	private void drawHorizontalLine(Graphics g, int y) {
-		g.drawLine(axisWidth, y, getWidth() - axisWidth, y);
+		g.drawLine(axisWidth, y, getWidth(), y);
 	}
 
 	private void hiliteAlleles(Graphics g) {
@@ -157,6 +157,7 @@ public class Chart extends JPanel {
 			return;
 		try {
 			xScale = new Scale(0, alleles.size(), axisWidth, getWidth());
+			autoscale = true;
 			fitYScaleToData();
 		} catch (Exception e) {
 		}
@@ -220,16 +221,13 @@ public class Chart extends JPanel {
 		autoscale = start > end;
 		if (start > end) {
 			fitYScaleToData();
-			repaint();
-			return;
 		} else {
 			try {
-				yScale = new Scale(yScale.toData(end), yScale.toData(start),
-						getHeight(), 0);
+				yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight(), 0);
 			} catch (Exception e) {
 			}
-			repaint();
 		}
+		repaint();
 	}
 
 	public Allele alleleAt(Point point) {

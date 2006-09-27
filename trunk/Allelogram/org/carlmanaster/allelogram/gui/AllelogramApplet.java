@@ -26,6 +26,7 @@ import org.carlmanaster.allelogram.model.Settings;
 import org.carlmanaster.allelogram.util.FileUtil;
 import org.carlmanaster.allelogram.util.PrintUtils;
 import org.carlmanaster.filter.Filter;
+import org.carlmanaster.predicate.Predicate;
 
 public class AllelogramApplet extends Application {
 	private Settings					settings;
@@ -96,6 +97,7 @@ public class AllelogramApplet extends Application {
 		try {
 			genotypes = reader.readGenotypes(file);
 			makeAlleles();
+			doClearBins();
 			chart.setAlleles(alleles);
 			chart.setControlGenotypes(findControlGenotypes());
 			getWindow().setTitle(file.getName());
@@ -112,8 +114,12 @@ public class AllelogramApplet extends Application {
 	private void makeAlleles() {
 		alleles.clear();
 		for (Genotype genotype : genotypes)
-			alleles.addAll(genotype.getAlleles());
+			alleles.addAll(getGenotypeAlleles(genotype));
 		sortAlleles();
+	}
+
+	private List<Allele> getGenotypeAlleles(Genotype genotype) {
+		return Filter.out(new Zero()).filtered(genotype.getAlleles());
 	}
 
 	private void sortAlleles() {
@@ -267,5 +273,12 @@ public class AllelogramApplet extends Application {
 		if (settingsFile != null && dataFile != null) {
 			doOpen(settingsFile, dataFile);
 		}
+	}
+	
+	private static class Zero extends Predicate<Allele> {
+		public boolean passes(Allele allele) {
+			return allele.getRawValue() == 0;
+		}
+		
 	}
 }
