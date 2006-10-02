@@ -47,11 +47,12 @@ public class Chart extends JPanel {
 		g.fillRect(0, 0, axisWidth, h);
 		g.setColor(Color.black);
 		drawVerticalLine(g, axisWidth);
-		int fontWidth = 20;
+		final int letterHeight = g.getFontMetrics().getAscent();
+		final int fontWidth = g.getFontMetrics().charWidth('0');
 		for (int i = (int) yScale.toData(h) % 5 * 5; i < yScale.toData(0); i += 5) {
 			int y = yScale.toScreen(i);
-			g.drawString("" + i, 0, y + g.getFontMetrics().getAscent() / 2);
-			g.drawLine(fontWidth, y, axisWidth, y);
+			g.drawString("" + i, 0, y + letterHeight / 2);
+			g.drawLine(3 * fontWidth + 2, y, axisWidth, y);
 		}
 
 	}
