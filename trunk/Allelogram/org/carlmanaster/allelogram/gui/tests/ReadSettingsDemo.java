@@ -10,7 +10,7 @@ import org.carlmanaster.allelogram.model.GenotypeReader;
 import org.carlmanaster.allelogram.model.Settings;
 import org.carlmanaster.allelogram.util.FileUtil;
 
-public class ReadSettingsTest extends TestCase {
+public class ReadSettingsDemo extends TestCase {
 	
 	public void testRead() throws Exception {
 		File file = FileUtil.pickFile();
