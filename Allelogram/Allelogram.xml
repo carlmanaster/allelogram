@@ -1,0 +1,51 @@
+<project name="Allelogram" basedir="." default="buildJar">
+
+	<property name="deploy" value="deploy" />
+	<property name="build" value="deploy/build" />
+	<property name="src" value="." />
+	<property name="report" value="deploy/reports" />
+	<target name="compile">
+		<property name="compilefiles" value="org/carlmanaster/allelogram/gui/AllelogramApplet.java" />
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" debug="true" includes="${compilefiles}" listfiles="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+	<target name="buildJar" depends="runTests">
+		<jar destfile="${deploy}/allelogram.jar" basedir="${build}" includes="org/**" excludes="**/tests/**">
+			<manifest>
+				<attribute name="Main-Class" value="org.carlmanaster.allelogram.gui.AllelogramApplet" />
+			</manifest>
+		</jar>
+	</target>
+	<target name="clean">
+		<delete dir="${deploy}" />
+		<mkdir dir="${deploy}" />
+	</target>
+	<target name="runTests" depends="clean">
+		<antcall target="compile">
+			<param name="compileFiles" value="org/**" />
+		</antcall>
+		<echo>*************   Running tests  *************</echo>
+		<delete dir="${report}" />
+		<mkdir dir="${report}" />
+
+		<junit printsummary="no" haltonfailure="no" haltonerror="no" showoutput="no" fork="yes">
+			<classpath>
+				<pathelement path="${build}" />
+				<pathelement path="${src}" />
+			</classpath>
+			<formatter type="xml" />
+			<batchtest todir="${report}" errorproperty="failure" failureproperty="failure">
+				<fileset dir="${src}">
+					<include name="**/**Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="failure" />
+		<antcall target="compile">
+			<param name="compileFiles" value="org/carlmanaster/allelogram/gui/AllelogramApplet.java" />
+		</antcall>
+	</target>
+
+</project>
