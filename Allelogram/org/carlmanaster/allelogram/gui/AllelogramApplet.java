@@ -197,8 +197,16 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 			selectMatching(genotype, classification);
 			return;
 		}
-		System.err.println(settings.info(genotype));
+		
 		select(genotype);
+	}
+
+	private void showGenotypeInfo(Genotype genotype) {
+		showInfo(settings.info(genotype));
+	}
+
+	private void showInfo(String info) {
+		System.err.println(info);
 	}
 
 	private void selectMatching(Genotype genotype, Classifier classification) {
@@ -206,12 +214,18 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 				classification, genotype);
 		selection.clear();
 		selection.addAll(Filter.in(predicate).filtered(genotypes));
+		showSelectionInfo();
 		repaint();
+	}
+
+	private void showSelectionInfo() {
+		showInfo(String.format("%1d genotypes selected", selection.size()));
 	}
 
 	private void select(Genotype genotype) {
 		selection.clear();
 		selection.add(genotype);
+		showGenotypeInfo(genotype);
 		repaint();
 	}
 
@@ -228,15 +242,12 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		double average = averageValue(controls);
 		for (Classification classification : getAllClassifications(sortClassifier)) {
 			try {
-				List<Genotype> thisGroup = Filter.in(
-						new GenotypeClassificationPredicate(sortClassifier,
-								classification)).filtered(genotypes);
-				List<Genotype> theseControls = Filter.in(
-						settings.getControlSubject()).filtered(thisGroup);
+				List<Genotype> theseGenotypes	= genotpesIn(classification);
+				List<Genotype> theseControls	= controls(theseGenotypes);
 				if (theseControls.isEmpty())
 					continue;
 				double offset = average - averageValue(theseControls);
-				for (Genotype genotype : thisGroup)
+				for (Genotype genotype : theseGenotypes)
 					genotype.offsetBy(offset);
 			} catch (Exception e) {
 			}
@@ -244,6 +255,14 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		rescale();
 		resort();
 		repaint();
+	}
+
+	private List<Genotype> controls(List<Genotype> these) {
+		return Filter.in(settings.getControlSubject()).filtered(these);
+	}
+
+	private List<Genotype> genotpesIn(Classification classification) throws Exception {
+		return Filter.in(new GenotypeClassificationPredicate(sortClassifier,classification)).filtered(genotypes);
 	}
 
 	private HashSet<Classification> getAllClassifications(Classifier classifier) {
@@ -282,9 +301,8 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 	}
 
 	protected void initFinal() {
-		if (settingsFile != null && dataFile != null) {
+		if (settingsFile != null && dataFile != null)
 			doOpen(settingsFile, dataFile);
-		}
 	}
 
 	private static class Zero extends Predicate<Allele> {
@@ -293,18 +311,10 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		}
 	}
 
-	public void dragEnter(DropTargetDragEvent arg0) {
-	}
-
-	public void dragOver(DropTargetDragEvent arg0) {
-	}
-
-	public void dropActionChanged(DropTargetDragEvent arg0) {
-		System.out.println("dropActionChanged");
-	}
-
-	public void dragExit(DropTargetEvent arg0) {
-	}
+	public void dragEnter(DropTargetDragEvent event)			{}
+	public void dragOver(DropTargetDragEvent event)			{}
+	public void dropActionChanged(DropTargetDragEvent event)	{}
+	public void dragExit(DropTargetEvent event) 				{}
 
 	public void drop(DropTargetDropEvent event) {
 		try {
