@@ -37,6 +37,7 @@ public class BinGuesser {
 			offset = a + gap / 2;
 		}
 		
+		offset = modulo(offset, size);
 		return makeBins(size, offset);
 	}
 
@@ -44,12 +45,16 @@ public class BinGuesser {
 		ArrayList<Bin> bins = new ArrayList<Bin>();
 		final Double first = values.get(0);
 		final Double last = values.get(values.size() - 1);
-		double x = Math.round(first / size - 1) * size + offset;
+		double x = boundaryBefore(size, offset, first);
 		while (x < last) {
 			bins.add(new Bin(x, x + size));
 			x += size;
 		}
 		return bins;
+	}
+
+	private double boundaryBefore(double size, double offset, final Double value) {
+		return Math.round(value / size - 1) * size + offset;
 	}
 
 	private Vector<Double> modulos(double size) {
@@ -65,6 +70,34 @@ public class BinGuesser {
 			return 0;
 		double x = Math.floor(a / b);
 		return a - x * b;
+	}
+
+	public double quality(List<Bin> bins) {
+		double result = 0;
+		for (Double value : values) 
+			result += findBin(bins, value).fit(value);
+		return result;
+	}
+
+	private Bin findBin(List<Bin> bins, Double value) {
+		for (Bin bin : bins) 
+			if (bin.contains(value))
+				return bin;
+		
+		for (Bin bin : bins)
+			System.err.println(bin.toString());
+		System.err.println(value);
+		return null;
+	}
+
+	public List<Bin> bestGuess() {
+		List<Bin> di = guess(2);		double quality2 = quality(di);
+		List<Bin> tri = guess(3);		double quality3 = quality(tri);
+		List<Bin> tetra = guess(4);	double quality4 = quality(tetra);
+		
+		if (quality4 < quality3 && quality4 < quality2)
+			return tetra;
+		return quality3 < quality2 ? tri : di;
 	}
 
 }
