@@ -56,4 +56,25 @@ public class BinGuesserTest extends TestCase {
 		assertEquals(new Bin(11, 13), bins.get(1));
 		assertEquals(new Bin(13, 15), bins.get(2));
 	}
+	
+	public void testAllBinsAreCreated() throws Exception {
+		// because of a bug detected in testQuality()
+		double[] d = new double[]{10.1, 14.2, 13.9, 18.6};
+		BinGuesser guesser = new BinGuesser(d);
+		List<Bin> bins = guesser.guess(4);
+
+		assertEquals(3, bins.size());
+	}
+	
+	public void testQuality() throws Exception {
+		double[] d = new double[]{10.1, 14.2, 13.9, 18.6};
+		BinGuesser guesser = new BinGuesser(d);
+		double quality2 = guesser.quality(guesser.guess(2));
+		double quality3 = guesser.quality(guesser.guess(3));
+		double quality4 = guesser.quality(guesser.guess(4));
+		assertTrue(quality4 < quality2);
+		assertTrue(quality4 < quality3);
+		
+		assertEquals(guesser.guess(4), guesser.bestGuess());
+	}
 }

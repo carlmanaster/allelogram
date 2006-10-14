@@ -45,4 +45,17 @@ public class Bin {
 
 	public void setLow(double d)	{lo = d;}
 	public void setHigh(double d)	{hi = d;}
+
+	private double width()	{return hi - lo;}
+	private double center()	{return (hi + lo) / 2;}
+
+	public double fit(double d) {
+		return Math.abs(d - center()) / (width() / 2);
+	}
+
+	public double fit(Allele allele) {
+		return fit(allele.getAdjustedValue());
+	}
+
+
 }
