@@ -1,5 +1,6 @@
 package org.carlmanaster.allelogram.model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,11 @@ public class Settings {
 	private final Integer[] alleleIndexes;
 
 	public Settings(File file) throws Exception {
-		this(FileUtil.readAll(FileUtil.makeReader(file)));
+		this(FileUtil.makeReader(file));
+	}
+
+	public Settings(BufferedReader reader) throws Exception {
+		this(FileUtil.readAll(reader));
 	}
 
     public Settings(String s) throws Exception {
@@ -34,19 +39,19 @@ public class Settings {
     		
     		int columnStart		= lines.indexOf("columns") + 1;
     		int classifierStart	= lines.indexOf("classifications") + 1;
-    		int sortLine			= lines.indexOf("sort") + 1;
+    		int sortLine		= lines.indexOf("sort") + 1;
     		int colorByLine		= lines.indexOf("color") + 1;
     		int infoStart		= lines.indexOf("info") + 1;
     		int clickStart		= lines.indexOf("click") + 1;
     		int controlLine		= lines.indexOf("control") + 1;
     		
-    		if (columnStart < 1)					throw new Exception("Settings must contain a 'columns' section.");
+    		if (columnStart < 1)				throw new Exception("Settings must contain a 'columns' section.");
     		if (classifierStart < columnStart)	throw new Exception("Settings must contain a 'classifications' section after the 'columns' section.");
     		if (sortLine < classifierStart)		throw new Exception("Settings must contain a 'sort' section after the 'classifications' section.");
     		if (colorByLine < sortLine)			throw new Exception("Settings must contain a 'color' section after the 'sort' section.");
-    		if (infoStart < colorByLine)			throw new Exception("Settings must contain an 'info' section after the 'color' section.");
+    		if (infoStart < colorByLine)		throw new Exception("Settings must contain an 'info' section after the 'color' section.");
     		if (clickStart < infoStart)			throw new Exception("Settings must contain a 'click' section after the 'info' section.");
-    		if (controlLine < clickStart)			throw new Exception("Settings must contain a 'control' section after the 'click' section.");
+    		if (controlLine < clickStart)		throw new Exception("Settings must contain a 'control' section after the 'click' section.");
 
     		for (int i = columnStart; i < classifierStart - 1; ++i)
     			columns.add(lines.get(i));

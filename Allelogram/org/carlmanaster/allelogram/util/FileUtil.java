@@ -35,8 +35,12 @@ public class FileUtil {
 		return sb.toString();
 	}
 
-	public static File chooseFile(String settingsFile) {
-		return (settingsFile != null) ? new File(settingsFile) : pickFile();
+	public static File chooseFile(String path) {
+		return (path != null) ? makeFile(path) : pickFile();
+	}
+
+	private static File makeFile(String path) {
+		return new File(path);
 	}
 
 }
