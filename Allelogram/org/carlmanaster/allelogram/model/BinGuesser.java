@@ -84,9 +84,6 @@ public class BinGuesser {
 			if (bin.contains(value))
 				return bin;
 		
-		for (Bin bin : bins)
-			System.err.println(bin.toString());
-		System.err.println(value);
 		return null;
 	}
 
