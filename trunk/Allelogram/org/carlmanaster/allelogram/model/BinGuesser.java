@@ -53,8 +53,8 @@ public class BinGuesser {
 		return bins;
 	}
 
-	private double boundaryBefore(double size, double offset, final Double value) {
-		return Math.round(value / size - 1) * size + offset;
+	public static double boundaryBefore(double size, double offset, final Double value) {
+		return Math.floor(value / size - 1) * size + offset;
 	}
 
 	private Vector<Double> modulos(double size) {
@@ -91,8 +91,8 @@ public class BinGuesser {
 	}
 
 	public List<Bin> bestGuess() {
-		List<Bin> di = guess(2);		double quality2 = quality(di);
-		List<Bin> tri = guess(3);		double quality3 = quality(tri);
+		List<Bin> di = guess(2);	double quality2 = quality(di);
+		List<Bin> tri = guess(3);	double quality3 = quality(tri);
 		List<Bin> tetra = guess(4);	double quality4 = quality(tetra);
 		
 		if (quality4 < quality3 && quality4 < quality2)

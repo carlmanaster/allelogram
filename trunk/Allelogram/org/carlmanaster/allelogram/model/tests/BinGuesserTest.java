@@ -63,7 +63,7 @@ public class BinGuesserTest extends TestCase {
 		BinGuesser guesser = new BinGuesser(d);
 		List<Bin> bins = guesser.guess(4);
 
-		assertEquals(3, bins.size());
+		assertEquals(4, bins.size());
 	}
 	
 	public void testQuality() throws Exception {

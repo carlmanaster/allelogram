@@ -76,9 +76,10 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 	public static void main(String[] args) {
 		// new AllelogramApplet("C:/temp/carl/vic_file_format",
 		// "C:/temp/carl/vic_1.txt").run("Allelogram");
-		new AllelogramApplet(// null, null
-				"/Users/carlmanaster/Desktop/PM_file_format",
-				"/Users/carlmanaster/Desktop/PM_data.txt").run("Allelogram");
+		//	new AllelogramApplet(
+		//		"/Users/carlmanaster/Desktop/PM_file_format",
+		//		"/Users/carlmanaster/Desktop/PM_data.txt").run("Allelogram");
+		new AllelogramApplet(null, null).run("Allelogram");
 	}
 
 	protected void buildMenuBar() {

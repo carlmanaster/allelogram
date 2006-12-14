@@ -1,0 +1,23 @@
+columns
+	well
+	str
+	animal
+	gel
+	Allele 1
+	Allele 2
+classifications
+	Animal: animal
+	Well: well
+	Gel: gel
+	Str: str
+sort
+	Gel
+color
+	Gel
+info
+	Gel
+click
+	Gel
+	Animal
+control
+	Animal: FCA 123

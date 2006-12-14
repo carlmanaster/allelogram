@@ -19,7 +19,10 @@ public class GenotypeReader {
 	}
 
 	public List<Genotype> readGenotypes(File file) throws IOException {
-		BufferedReader reader = FileUtil.makeReader(file);
+		return readGenotypes(FileUtil.makeReader(file));
+	}
+
+	public List<Genotype> readGenotypes(BufferedReader reader) throws IOException {
 		ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
 		while (reader.ready()) {
 			Genotype genotype = makeGenotype(reader.readLine());

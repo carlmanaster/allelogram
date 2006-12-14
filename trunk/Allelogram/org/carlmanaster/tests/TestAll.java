@@ -9,6 +9,7 @@ public class TestAll extends TestSuite{
 		suite.addTest(org.carlmanaster.filter.tests.TestAll.suite());
 		suite.addTest(org.carlmanaster.allelogram.model.tests.TestAll.suite());
 		suite.addTest(org.carlmanaster.allelogram.gui.tests.TestAll.suite());
+		suite.addTestSuite(org.carlmanaster.tests.Regressions.class);
 		return suite;
 	}
 }
