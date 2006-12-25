@@ -1,23 +1,28 @@
 package org.carlmanaster.allelogram.gui;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.LayoutManager;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import javax.swing.BoxLayout;
+
+import javax.swing.Box;
+import javax.swing.JTextArea;
+
 import org.carlmanaster.allelogram.gui.mouse.AllelogramMouseDispatcher;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
@@ -34,7 +39,7 @@ import org.carlmanaster.allelogram.util.PrintUtils;
 import org.carlmanaster.filter.Filter;
 import org.carlmanaster.predicate.Predicate;
 
-public class AllelogramApplet extends Application implements DropTargetListener {
+public class AllelogramApplet extends Application {
 	private Settings settings;
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
@@ -46,6 +51,8 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 	private Classifier sortClassifier;
 	private final String settingsFile;
 	private final String dataFile;
+	private Integer activeAllele = null;
+	private JTextArea info;
 
 	public AllelogramApplet(String settingsFile, String dataFile) {
 		this.settingsFile = settingsFile;
@@ -54,19 +61,30 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 	}
 
 	private void makeDropTargetListener() {
-		this.setDropTarget(new DropTarget(this, this));
+		setDropTarget(new DropTarget(this, new DropListener()));
 	}
 
 	public void init() {
 		super.init();
 		setPreferredSize(new Dimension(700, 400));
-		getContentPane().setLayout(
-				new Layout(getContentPane(), BoxLayout.Y_AXIS));
-		getContentPane().add(chart);
-		AllelogramMouseDispatcher mouseDispatcher = new AllelogramMouseDispatcher(
-				this, chart);
+		
+		info = new JTextArea();
+		info.setEditable(false);
+		info.setPreferredSize(new Dimension(700, 40));
+		info.setMaximumSize(new Dimension(700, 40));
+		info.setMinimumSize(new Dimension(100, 40));
+		info.setFocusable(false);
+		
+		AllelogramMouseDispatcher mouseDispatcher = new AllelogramMouseDispatcher(this, chart);
 		chart.addMouseListener(mouseDispatcher);
 		chart.addMouseMotionListener(mouseDispatcher);
+		addKeyListener(new ArrowKeyListener());
+
+		Container frame = getContentPane();
+		frame.setLayout(new Layout());
+		
+		frame.add(chart);
+		frame.add(info);
 	}
 
 	public void paint(Graphics g) {
@@ -152,8 +170,7 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 
 	private void sortBy(Classifier classification) {
 		sortClassifier = classification;
-		comparator = classification == null ? null : new GenotypeComparator(
-				classification);
+		comparator = classification == null ? null : new GenotypeComparator(classification);
 		sortAlleles();
 	}
 
@@ -162,17 +179,10 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		repaint();
 	}
 
-	private class Layout extends BoxLayout {
-		public Layout(Container container, int i) {
-			super(container, i);
-		}
-
-		public void layoutContainer(Container container) {
-			super.layoutContainer(container);
-			chart.setSize(container.getSize());
-		}
+	private int getInfoHeight() {
+		return settings == null ? 24 : (1 + settings.getInfoClassifiers().size()) * info.getFontMetrics(info.getFont()).getHeight();
 	}
-
+	
 	public Settings getSettings() {
 		return settings;
 	}
@@ -184,6 +194,31 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 	public void doClearBins() {
 		bins.clear();
 		repaint();
+	}
+
+	public void selectAllele(Allele allele, boolean commandKey, boolean optionKey) {
+		selectGenotype(allele.getGenotype(), commandKey, optionKey);
+		activeAllele = alleles.indexOf(allele);
+	}
+	
+	public void selectNextAllele() {
+		selectAllele(alleles.get(nextAlleleIndex()), false, false);
+	}
+	
+	private int nextAlleleIndex() {
+		if (activeAllele == null)				return 0;
+		if (activeAllele == alleles.size() - 1)	return 0;
+		return activeAllele + 1;
+	}
+
+	public void selectPreviousAllele() {
+		selectAllele(alleles.get(previousAlleleIndex()), false, false);
+	}
+	
+	private int previousAlleleIndex() {
+		if (activeAllele == null)	return alleles.size() - 1;
+		if (activeAllele == 0)		return alleles.size() - 1;
+		return activeAllele - 1;
 	}
 
 	public void selectGenotype(Genotype genotype, boolean commandKey,
@@ -206,8 +241,8 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		showInfo(settings.info(genotype));
 	}
 
-	private void showInfo(String info) {
-		System.err.println(info);
+	private void showInfo(String s) {
+		info.setText(s);
 	}
 
 	private void selectMatching(Genotype genotype, Classifier classification) {
@@ -312,26 +347,55 @@ public class AllelogramApplet extends Application implements DropTargetListener 
 		}
 	}
 
-	public void dragEnter(DropTargetDragEvent event)			{}
-	public void dragOver(DropTargetDragEvent event)			{}
-	public void dropActionChanged(DropTargetDragEvent event)	{}
-	public void dragExit(DropTargetEvent event) 				{}
-
-	public void drop(DropTargetDropEvent event) {
-		try {
-			DataFlavor flavor = event.getCurrentDataFlavors()[0];
-			if (DataFlavor.javaFileListFlavor.equals(flavor)) {
-				event.acceptDrop(DnDConstants.ACTION_REFERENCE);
-				List list = (List) event.getTransferable().getTransferData(
-						flavor);
-				File file = (File) list.get(0);
-				doOpen(null, file.getAbsolutePath());
-				event.dropComplete(true);
+	private class DropListener extends DropTargetAdapter {
+		public void drop(DropTargetDropEvent event) {
+			try {
+				DataFlavor flavor = event.getCurrentDataFlavors()[0];
+				if (DataFlavor.javaFileListFlavor.equals(flavor)) {
+					event.acceptDrop(DnDConstants.ACTION_REFERENCE);
+					List list = (List) event.getTransferable().getTransferData(flavor);
+					File file = (File) list.get(0);
+					doOpen(null, file.getAbsolutePath());
+					event.dropComplete(true);
+				}
+			} catch (UnsupportedFlavorException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (UnsupportedFlavorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
+
+	private class ArrowKeyListener extends KeyAdapter {
+		public void keyPressed(KeyEvent e) {
+			if (!e.isActionKey()) return;
+			switch (e.getKeyCode()) {
+				case KeyEvent.VK_LEFT:	selectPreviousAllele();	break;
+				case KeyEvent.VK_RIGHT:	selectNextAllele();		break;
+			}
+			
+		}
+	}
+
+	private class Layout implements LayoutManager {
+		public void layoutContainer(Container container) {
+			Dimension size = container.getSize();
+			int infoHeight = getInfoHeight();
+			size.height = size.height - infoHeight;
+
+			chart.setSize(size);
+			chart.setLocation(0, 0);
+			
+			size.height = infoHeight;
+			info.setSize(size);
+			info.setLocation(0, chart.getHeight());
+		}
+
+		public void addLayoutComponent(String name, Component comp)	{}
+		public Dimension minimumLayoutSize(Container parent)		{return null;}
+		public Dimension preferredLayoutSize(Container parent)		{return null;}
+		public void removeLayoutComponent(Component comp)			{}
+	}
+
 }
+ 

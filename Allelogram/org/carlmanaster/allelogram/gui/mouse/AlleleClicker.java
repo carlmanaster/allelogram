@@ -18,6 +18,6 @@ public class AlleleClicker extends ClickerDragger {
 	public void mouseClicked(MouseEvent event) {
 		boolean commandKey = PlatformUtil.isMac() ? event.isMetaDown() : event.isControlDown();
 		boolean optionKey = event.isAltDown();
-		applet.selectGenotype(allele.getGenotype(), commandKey, optionKey);
+		applet.selectAllele(allele, commandKey, optionKey);
 	}
 }
