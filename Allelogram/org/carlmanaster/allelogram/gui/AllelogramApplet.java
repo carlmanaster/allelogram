@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.JTextArea;
 
 import org.carlmanaster.allelogram.gui.mouse.AllelogramMouseDispatcher;
@@ -373,7 +372,6 @@ public class AllelogramApplet extends Application {
 				case KeyEvent.VK_LEFT:	selectPreviousAllele();	break;
 				case KeyEvent.VK_RIGHT:	selectNextAllele();		break;
 			}
-			
 		}
 	}
 
