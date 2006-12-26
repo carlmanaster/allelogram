@@ -14,6 +14,7 @@ public class TestAll extends TestSuite{
         suite.addTestSuite(GenotypeTest.class);
         suite.addTestSuite(SettingsTest.class);
         suite.addTestSuite(CircularListTest.class);
+        suite.addTestSuite(BinNamerTest.class);
         return suite;
     }
 }
