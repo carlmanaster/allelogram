@@ -150,6 +150,7 @@ public class Chart extends JPanel {
 
 	public void setAlleles(List<Allele> alleles) {
 		this.alleles = alleles;
+		autoscale = true;
 		makeScales();
 	}
 
@@ -158,7 +159,6 @@ public class Chart extends JPanel {
 			return;
 		try {
 			xScale = new Scale(0, alleles.size(), axisWidth, getWidth());
-			autoscale = true;
 			fitYScaleToData();
 		} catch (Exception e) {
 		}
