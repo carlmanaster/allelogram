@@ -110,10 +110,34 @@ public class MenuBarBuilder {
 			}
 		});
 
+		MenuItem bySize = new MenuItem("Name Bins by Size");
+		bySize.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.nameBinsBySize();
+			}
+		});
+		MenuItem byLetter = new MenuItem("Name Bins by Letter");
+		byLetter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.nameBinsByLetter();
+			}
+		});
+		MenuItem byIndex = new MenuItem("Name Bins by Index");
+		byIndex.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.nameBinsByIndex();
+			}
+		});
+
 		Menu menu = makeMenu("Bin");
 		menu.add(guess);
 		menu.addSeparator();
 		menu.add(clear);
+		menu.addSeparator();
+		menu.add(bySize);
+		menu.add(byLetter);
+		menu.add(byIndex);
+		
 		return menu;
 	}
 	

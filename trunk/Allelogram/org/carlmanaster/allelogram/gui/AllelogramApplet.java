@@ -17,8 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTextArea;
 
@@ -26,6 +28,7 @@ import org.carlmanaster.allelogram.gui.mouse.AllelogramMouseDispatcher;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
 import org.carlmanaster.allelogram.model.BinGuesser;
+import org.carlmanaster.allelogram.model.BinNamer;
 import org.carlmanaster.allelogram.model.Classification;
 import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
@@ -42,7 +45,8 @@ public class AllelogramApplet extends Application {
 	private Settings settings;
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
-	private List<Bin> bins = new ArrayList<Bin>();
+	
+	private Map<String, Bin> bins = new HashMap<String, Bin>();
 	private final HashSet<Genotype> selection = new HashSet<Genotype>();
 	private final Chart chart = new Chart(this);
 	private GenotypeComparator comparator = null;
@@ -52,6 +56,7 @@ public class AllelogramApplet extends Application {
 	private final String dataFile;
 	private Integer activeAllele = null;
 	private JTextArea info;
+	private BinNamer binNamer = BinNamer.size;
 
 	public AllelogramApplet(String settingsFile, String dataFile) {
 		this.settingsFile = settingsFile;
@@ -157,7 +162,26 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void doGuess() {
-		bins = new BinGuesser(alleles).bestGuess();
+		List<Bin> list = new BinGuesser(alleles).bestGuess();
+		setBins(list);
+	}
+
+	private void renameBins() {
+		ArrayList<Bin> list = new ArrayList<Bin>();
+		list.addAll(bins.values());
+		setBins(list);
+	}
+
+	private void setBins(List<Bin> list) {
+		
+		System.err.println("setting bins");
+		
+		
+		Collections.sort(list);
+		bins.clear();
+		for (int i = 0; i < list.size(); ++i)
+			bins.put(binNamer.getName(list.get(i), i), list.get(i));
+		
 		chart.setBins(bins);
 		repaint();
 	}
@@ -193,6 +217,21 @@ public class AllelogramApplet extends Application {
 	public void doClearBins() {
 		bins.clear();
 		repaint();
+	}
+
+	public void nameBinsBySize() {
+		binNamer  = BinNamer.size;
+		renameBins();
+	}
+
+	public void nameBinsByLetter() {
+		binNamer  = BinNamer.alphabetic;
+		renameBins();
+	}
+
+	public void nameBinsByIndex() {
+		binNamer  = BinNamer.sequential;
+		renameBins();
 	}
 
 	public void selectAllele(Allele allele, boolean commandKey, boolean optionKey) {
@@ -394,6 +433,7 @@ public class AllelogramApplet extends Application {
 		public Dimension preferredLayoutSize(Container parent)		{return null;}
 		public void removeLayoutComponent(Component comp)			{}
 	}
+
 
 }
  
