@@ -1,6 +1,6 @@
 package org.carlmanaster.allelogram.model;
 
-public class Bin {
+public class Bin implements Comparable<Bin> {
 	private Double lo;
 	private Double hi;
 
@@ -55,6 +55,10 @@ public class Bin {
 
 	public double fit(Allele allele) {
 		return fit(allele.getAdjustedValue());
+	}
+
+	public int compareTo(Bin that) {
+		return (int) (this.lo - that.lo);
 	}
 
 

@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
 import javax.swing.JPanel;
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
@@ -17,7 +19,7 @@ public class Chart extends JPanel {
 
 	private List<Allele> alleles;
 	private HashSet<Allele> controlAlleles = new HashSet<Allele>();
-	private List<Bin> bins;
+	private Map<String, Bin> bins;
 	private int axisWidth = 30;
 	private Scale xScale;
 	private Scale yScale;
@@ -78,13 +80,18 @@ public class Chart extends JPanel {
 		if (bins == null)
 			return;
 		g.setColor(BIN_COLOR);
-		for (Bin bin : bins)
-			paintBin(g, bin);
+		for (String name : bins.keySet())
+			paintBin(g, bins.get(name), name);
 	}
 
-	private void paintBin(Graphics g, Bin bin) {
+	private void paintBin(Graphics g, Bin bin, String name) {
 		drawHorizontalLine(g, yScale.toScreen(bin.getLow()));
 		drawHorizontalLine(g, yScale.toScreen(bin.getHigh()));
+		
+		
+		int x = axisWidth + 10;
+		int y = yScale.toScreen((bin.getHigh() + bin.getLow()) / 2);
+		g.drawString(name, x, y);
 	}
 
 	private void drawVerticalLine(Graphics g, int x) {
@@ -191,7 +198,7 @@ public class Chart extends JPanel {
 		return max;
 	}
 
-	public void setBins(List<Bin> bins) {
+	public void setBins(Map<String, Bin> bins) {
 		this.bins = bins;
 	}
 
@@ -249,12 +256,12 @@ public class Chart extends JPanel {
 		Bin above = null;
 		Bin below = null;
 		int boundaryV = 0;
-		for (Bin bin : bins)
+		for (Bin bin : bins.values())
 			if (Math.abs(yScale.toScreen(bin.getLow()) - v) < 4) {
 				below = bin;
 				boundaryV = yScale.toScreen(bin.getLow());
 			}
-		for (Bin bin : bins)
+		for (Bin bin : bins.values())
 			if (Math.abs(yScale.toScreen(bin.getHigh()) - v) < 4) {
 				above = bin;
 				boundaryV = yScale.toScreen(bin.getHigh());
