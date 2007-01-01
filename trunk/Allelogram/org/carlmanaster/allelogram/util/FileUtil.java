@@ -16,7 +16,17 @@ public class FileUtil {
 		picker.setVisible(true);
 		try {
 			File file = new File(picker.getDirectory(), picker.getFile());
-			System.err.println(file.getAbsolutePath());
+			return file;
+		} catch (RuntimeException e) {
+			return null;
+		}
+	}
+	
+	public static File pickNewFile() {
+		FileDialog picker = new FileDialog(new Frame(), "", FileDialog.SAVE);
+		picker.setVisible(true);
+		try {
+			File file = new File(picker.getDirectory(), picker.getFile());
 			return file;
 		} catch (RuntimeException e) {
 			return null;
