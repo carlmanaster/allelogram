@@ -14,7 +14,9 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,6 +142,50 @@ public class AllelogramApplet extends Application {
 			repaint();
 		} catch (IOException e) {
 		}
+	}
+	
+
+	public void doSaveAs() {
+		File file = FileUtil.pickNewFile();
+		if (file == null)
+			return;
+		
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+
+			for (String column : settings.getColumns())
+				out.print(column + '\t');
+			
+			int ploidy = settings.getAlleleIndexes().length;
+			for (int i = 0; i < ploidy; ++i)
+				out.print("Call " + (i + 1) + '\t');
+			
+			out.println();
+			
+			for (Genotype genotype : genotypes) {
+				for (String column : settings.getColumns())
+					out.print(genotype.get(column) + '\t');
+				
+				List<Double> values = genotype.getAdjustedAlleleValues(ploidy);
+				for (Double value : values)
+					out.print(call(value) + '\t');
+
+				out.println();
+			}
+			
+			out.close();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private String call(Double value) {
+		for (String key : bins.keySet())
+			if (bins.get(key).contains(value))
+				return key;
+		return "";
 	}
 
 	private List<Genotype> findControlGenotypes() {
