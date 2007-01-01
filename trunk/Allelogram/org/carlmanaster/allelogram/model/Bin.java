@@ -22,7 +22,7 @@ public class Bin implements Comparable<Bin> {
 	public boolean equals(Object obj) {
 		if (obj == null)				return false;
 		if (obj == this)				return true;
-		if (!(obj instanceof Bin))	return false;
+		if (!(obj instanceof Bin))		return false;
 		Bin that = (Bin) obj;
 		if (!this.lo.equals(that.lo))	return false;
 		if (!this.hi.equals(that.hi))	return false;

@@ -166,17 +166,13 @@ public class AllelogramApplet extends Application {
 		setBins(list);
 	}
 
-	private void renameBins() {
+	public void renameBins() {
 		ArrayList<Bin> list = new ArrayList<Bin>();
 		list.addAll(bins.values());
 		setBins(list);
 	}
 
 	private void setBins(List<Bin> list) {
-		
-		System.err.println("setting bins");
-		
-		
 		Collections.sort(list);
 		bins.clear();
 		for (int i = 0; i < list.size(); ++i)

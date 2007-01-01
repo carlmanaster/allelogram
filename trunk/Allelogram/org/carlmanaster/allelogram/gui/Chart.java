@@ -88,7 +88,6 @@ public class Chart extends JPanel {
 		drawHorizontalLine(g, yScale.toScreen(bin.getLow()));
 		drawHorizontalLine(g, yScale.toScreen(bin.getHigh()));
 		
-		
 		int x = axisWidth + 10;
 		int y = yScale.toScreen((bin.getHigh() + bin.getLow()) / 2);
 		g.drawString(name, x, y);

@@ -24,7 +24,7 @@ public class AllelogramMouseDispatcher extends MouseDispatcher {
 			return new AlleleClicker(applet, allele);
 		BinBoundary boundary = chart.binBoundaryAt(point.y);
 		if (boundary != null)
-			return new BinBoundaryDragger(chart, boundary);
+			return new BinBoundaryDragger(applet, chart, boundary);
 		if (true)
 			return new Zoomer(chart);
 		return doNothing();
