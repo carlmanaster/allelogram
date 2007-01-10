@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 import org.carlmanaster.allelogram.gui.mouse.AllelogramMouseDispatcher;
@@ -210,6 +211,19 @@ public class AllelogramApplet extends Application {
 	public void doGuess() {
 		List<Bin> list = new BinGuesser(alleles).bestGuess();
 		setBins(list);
+	}
+	
+	public void doGuessBySize() {
+		String s = JOptionPane.showInputDialog("Size?");
+		if (s == null)
+			return;
+		try {
+			Double size = Double.parseDouble(s);
+			List<Bin> list = new BinGuesser(alleles).guess(size);
+			setBins(list);
+		} catch (NumberFormatException e) {
+			return;
+		}
 	}
 
 	public void renameBins() {
@@ -475,7 +489,6 @@ public class AllelogramApplet extends Application {
 		public Dimension preferredLayoutSize(Container parent)		{return null;}
 		public void removeLayoutComponent(Component comp)			{}
 	}
-
 
 }
  
