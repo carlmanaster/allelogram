@@ -8,12 +8,14 @@ public class Allele {
 		this.value = value;
 	}
 	
-	public double getRawValue() {return value;}
-	public double getAdjustedValue() {return genotype.adjusted(value);}
+	public double getRawValue()			{return value;}
+	public double getAdjustedValue()	{return genotype.adjusted(value);}
+	public double getOffset()			{return genotype.getOffset();}
 
 	public String toString() {
 		return String.format("%2.2f", getAdjustedValue());
 	}
 
 	public Genotype getGenotype() {return genotype;}
+
 }

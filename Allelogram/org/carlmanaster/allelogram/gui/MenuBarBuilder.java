@@ -160,12 +160,20 @@ public class MenuBarBuilder {
 	}
 	
 	/*
+	 * Show Normalization
 	 * Auto-Normalize
 	 * --------------
 	 * Clear Normalization
 	 * 
 	 */
 	private Menu buildNormalizeMenu() {
+		MenuItem showNormalization = new MenuItem("Show Normalization");
+		showNormalization.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.toggleNormalization();
+			}
+		});
+
 		MenuItem normalize = new MenuItem("Auto-Normalize");
 		normalize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -181,6 +189,7 @@ public class MenuBarBuilder {
 		});
 
 		Menu menu = makeMenu("Normalize");
+		menu.add(showNormalization);
 		menu.add(normalize);
 		menu.addSeparator();
 		menu.add(clear);

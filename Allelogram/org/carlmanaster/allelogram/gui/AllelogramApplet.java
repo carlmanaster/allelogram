@@ -251,9 +251,9 @@ public class AllelogramApplet extends Application {
 		repaint();
 	}
 
-	private void sortBy(Classifier classification) {
-		sortClassifier = classification;
-		comparator = classification == null ? null : new GenotypeComparator(classification);
+	private void sortBy(Classifier classifier) {
+		sortClassifier = classifier;
+		comparator = classifier == null ? null : new GenotypeComparator(classifier);
 		sortAlleles();
 	}
 
@@ -365,6 +365,11 @@ public class AllelogramApplet extends Application {
 
 	public HashSet<Genotype> getSelection() {
 		return selection;
+	}
+
+
+	public void toggleNormalization() {
+		chart.toggleNormalization();
 	}
 
 	public void doAutonormalize() {
@@ -492,6 +497,10 @@ public class AllelogramApplet extends Application {
 		public Dimension minimumLayoutSize(Container parent)		{return null;}
 		public Dimension preferredLayoutSize(Container parent)		{return null;}
 		public void removeLayoutComponent(Component comp)			{}
+	}
+
+	public Classifier getSortClassifier() {
+		return sortClassifier;
 	}
 
 }
