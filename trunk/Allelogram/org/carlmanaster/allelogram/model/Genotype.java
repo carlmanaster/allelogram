@@ -90,4 +90,8 @@ public class Genotype {
 		return sb.toString();
 	}
 
+	public double getOffset() {
+		return offset;
+	}
+
 }

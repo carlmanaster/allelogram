@@ -10,12 +10,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JPanel;
+
 import org.carlmanaster.allelogram.model.Allele;
 import org.carlmanaster.allelogram.model.Bin;
+import org.carlmanaster.allelogram.model.Classification;
+import org.carlmanaster.allelogram.model.Classifier;
 import org.carlmanaster.allelogram.model.Genotype;
 
 public class Chart extends JPanel {
 	private static final Color BIN_COLOR = Color.CYAN;
+
+	private static final Color NORMALIZATION_COLOR = new Color(255,204,255);
 
 	private List<Allele> alleles;
 	private HashSet<Allele> controlAlleles = new HashSet<Allele>();
@@ -26,15 +31,24 @@ public class Chart extends JPanel {
 	private Colorizer colorizer = new Colorizer();
 	private final HashSet<Genotype> selection;
 	private boolean autoscale = true;
+	private boolean showingNormalization = false;
+	private final AllelogramApplet applet;
 
 	public Chart(AllelogramApplet applet) {
+		this.applet = applet;
 		setBackground(Color.WHITE);
 		selection = applet.getSelection();
+	}
+	
+	public void toggleNormalization() {
+		showingNormalization = !showingNormalization;
+		repaint();
 	}
 
 	public void paint(Graphics g) {
 		super.paint(g);
 		paintAxis(g);
+		paintNormalization(g);
 		hiliteAlleles(g);
 		paintBins(g);
 		paintAlleles(g);
@@ -74,6 +88,68 @@ public class Chart extends JPanel {
 	public void setSize(Dimension dimension) {
 		super.setSize(dimension);
 		makeScales();
+	}
+
+	private void paintNormalization(Graphics g) {
+		if (!showingNormalization)
+			return;
+		final Classifier sort = applet.getSortClassifier();
+		if (sort == null)
+			return;
+		
+		for (Normalization normalization : makeNormalizations(sort))
+			paintNormalization(g, normalization);
+	}
+
+	private ArrayList<Normalization> makeNormalizations(final Classifier sort) {
+		Classification lastClassification = null;
+		int start = 0;
+		int end = 0;
+		double offset = 0.0;
+		ArrayList<Normalization> normalizations = new ArrayList<Normalization>();
+		for (int i = 0; i < alleles.size(); ++i) {
+			final Allele allele = alleles.get(i);
+			int h = alleleLocation(allele, i).x;
+			Classification classification = sort.classify(allele.getGenotype());
+
+			if (classification.equals(lastClassification) && i < alleles.size() - 1) {
+				end = h;
+			} else {
+				if (lastClassification != null) {
+					normalizations.add(new Normalization(start, end, offset));
+				}
+				lastClassification = classification;
+				start = h;
+				offset = allele.getOffset();
+			}
+		}
+		return normalizations;
+	}
+
+	private void paintNormalization(Graphics g, Normalization normalization) {
+		double margin = (max() - min()) / 5;
+		double yLow = min() + margin;
+		double yHigh = max() - margin;
+		yLow	+= normalization.offset;
+		yHigh	+= normalization.offset;
+		int vLow = yScale.toScreen(yHigh);
+		int vHigh = yScale.toScreen(yLow);
+		
+		g.setColor(NORMALIZATION_COLOR);
+		g.fillRect(normalization.start, vLow, normalization.width, vHigh - vLow);
+	}
+
+	public static class Normalization {
+		private final int start;
+		private final double offset;
+		private final int width;
+
+		public Normalization(int start, int end, double offset) {
+			this.start = start;
+			this.offset = offset;
+			this.width = end - start + 1;
+		}
+
 	}
 
 	private void paintBins(Graphics g) {
