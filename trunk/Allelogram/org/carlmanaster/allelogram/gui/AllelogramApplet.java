@@ -159,6 +159,8 @@ public class AllelogramApplet extends Application {
 			
 			int ploidy = settings.getAlleleIndexes().length;
 			for (int i = 0; i < ploidy; ++i)
+				out.print("Normalized Size " + (i + 1) + '\t');
+			for (int i = 0; i < ploidy; ++i)
 				out.print("Call " + (i + 1) + '\t');
 			
 			out.println();
@@ -168,6 +170,8 @@ public class AllelogramApplet extends Application {
 					out.print(genotype.get(column) + '\t');
 				
 				List<Double> values = genotype.getAdjustedAlleleValues(ploidy);
+				for (Double value : values)
+					out.print(String.format("%.2f\t", value));
 				for (Double value : values)
 					out.print(call(value) + '\t');
 
