@@ -503,5 +503,11 @@ public class AllelogramApplet extends Application {
 		return sortClassifier;
 	}
 
+	public List<Genotype> genotypesMatching(Genotype genotype) {
+		Classifier sort = getSortClassifier();
+		GenotypeClassificationPredicate predicate = new GenotypeClassificationPredicate(sort, genotype);
+		return (Filter.in(predicate).filtered(genotypes));
+	}
+
 }
  
