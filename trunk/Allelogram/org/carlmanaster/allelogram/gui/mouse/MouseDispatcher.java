@@ -15,7 +15,7 @@ public abstract class MouseDispatcher implements MouseListener, MouseMotionListe
 	protected abstract ClickerDragger findDelegate(MouseEvent event);
 	
 	public void mouseClicked(MouseEvent event)		{delegate.mouseClicked(event);}
-	public void mouseReleased(MouseEvent event)	{delegate.mouseReleased(event);}
+	public void mouseReleased(MouseEvent event)		{delegate.mouseReleased(event);}
 	public void mouseDragged(MouseEvent event)		{delegate.mouseDragged(event);}
 
 	public void mouseMoved(MouseEvent event)		{}

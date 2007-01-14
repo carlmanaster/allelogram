@@ -20,7 +20,7 @@ import org.carlmanaster.allelogram.model.Genotype;
 public class Chart extends JPanel {
 	private static final Color BIN_COLOR = Color.CYAN;
 
-	private static final Color NORMALIZATION_COLOR = new Color(255,204,255);
+	private static final Color NORMALIZATION_COLOR = new Color(204, 255, 255);
 
 	private List<Allele> alleles;
 	private HashSet<Allele> controlAlleles = new HashSet<Allele>();
@@ -44,6 +44,8 @@ public class Chart extends JPanel {
 		showingNormalization = !showingNormalization;
 		repaint();
 	}
+	
+	public boolean isShowingNormalization() {return showingNormalization;}
 
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -325,6 +327,23 @@ public class Chart extends JPanel {
 		return null;
 	}
 
+	public Allele closestAllele(int x) {
+		Allele closest = null;
+		int distance = Integer.MAX_VALUE;
+		if (alleles == null)
+			return null;
+		for (int i = 0; i < alleles.size(); ++i) {
+			Allele allele = alleles.get(i);
+			Point p = alleleLocation(allele, i);
+			int d = Math.abs(p.x - x);
+			if (d < distance) {
+				distance = d;
+				closest = allele;
+			}
+		}
+		return closest;
+	}
+	
 	public BinBoundary binBoundaryAt(int v) {
 		if (bins == null)
 			return null;
@@ -357,4 +376,6 @@ public class Chart extends JPanel {
 	public double toDataY(int v) {
 		return yScale.toData(v);
 	}
+
+
 }
