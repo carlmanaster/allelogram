@@ -22,10 +22,13 @@ public class Chart extends JPanel {
 
 	private static final Color NORMALIZATION_COLOR = new Color(204, 255, 255);
 
+	private static final int AXIS_WIDTH = 30;
+	private static final int X_MARGIN = 10;
+	private static final int Y_MARGIN = 20;
+
 	private List<Allele> alleles;
 	private HashSet<Allele> controlAlleles = new HashSet<Allele>();
 	private Map<String, Bin> bins;
-	private int axisWidth = 30;
 	private Scale xScale;
 	private Scale yScale;
 	private Colorizer colorizer = new Colorizer();
@@ -62,15 +65,15 @@ public class Chart extends JPanel {
 			return;
 		int h = getHeight();
 		g.setColor(Color.white);
-		g.fillRect(0, 0, axisWidth, h);
+		g.fillRect(0, 0, AXIS_WIDTH, h);
 		g.setColor(Color.black);
-		drawVerticalLine(g, axisWidth);
+		drawVerticalLine(g, AXIS_WIDTH);
 		final int letterHeight = g.getFontMetrics().getAscent();
 		final int fontWidth = g.getFontMetrics().charWidth('0');
 		for (int i = (int) yScale.toData(h) % 5 * 5; i < yScale.toData(0); i += 5) {
 			int y = yScale.toScreen(i);
 			g.drawString("" + i, 0, y + letterHeight / 2);
-			g.drawLine(3 * fontWidth + 2, y, axisWidth, y);
+			g.drawLine(3 * fontWidth + 2, y, AXIS_WIDTH, y);
 		}
 
 	}
@@ -165,7 +168,7 @@ public class Chart extends JPanel {
 		drawHorizontalLine(g, yScale.toScreen(bin.getLow()));
 		drawHorizontalLine(g, yScale.toScreen(bin.getHigh()));
 		
-		int x = axisWidth + 10;
+		int x = AXIS_WIDTH + 10;
 		int y = yScale.toScreen((bin.getHigh() + bin.getLow()) / 2);
 		g.drawString(name, x, y);
 	}
@@ -175,7 +178,7 @@ public class Chart extends JPanel {
 	}
 	
 	private void drawHorizontalLine(Graphics g, int y) {
-		g.drawLine(axisWidth, y, getWidth(), y);
+		g.drawLine(AXIS_WIDTH, y, getWidth(), y);
 	}
 
 	private void hiliteAlleles(Graphics g) {
@@ -241,7 +244,7 @@ public class Chart extends JPanel {
 		if (alleles == null)
 			return;
 		try {
-			xScale = new Scale(0, alleles.size(), axisWidth, getWidth());
+			xScale = new Scale(0, alleles.size(), 2 * AXIS_WIDTH + X_MARGIN, getWidth() - X_MARGIN);
 			fitYScaleToData();
 		} catch (Exception e) {
 		}
@@ -251,7 +254,7 @@ public class Chart extends JPanel {
 		if (!autoscale)
 			return;
 		try {
-			yScale = new Scale(min(), max(), getHeight(), 0);
+			yScale = new Scale(min(), max(), getHeight() - Y_MARGIN, Y_MARGIN);
 		} catch (Exception e) {
 		}
 	}
@@ -307,7 +310,7 @@ public class Chart extends JPanel {
 			fitYScaleToData();
 		} else {
 			try {
-				yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight(), 0);
+				yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight() - Y_MARGIN, Y_MARGIN);
 			} catch (Exception e) {
 			}
 		}
