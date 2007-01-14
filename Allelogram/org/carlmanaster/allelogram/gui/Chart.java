@@ -114,9 +114,8 @@ public class Chart extends JPanel {
 			int h = alleleLocation(allele, i).x;
 			Classification classification = sort.classify(allele.getGenotype());
 
-			if (classification.equals(lastClassification) && i < alleles.size() - 1) {
-				end = h;
-			} else {
+			end = h;
+			if (!classification.equals(lastClassification) || i == alleles.size() - 1) {
 				if (lastClassification != null) {
 					normalizations.add(new Normalization(start, end, offset));
 				}
@@ -149,7 +148,7 @@ public class Chart extends JPanel {
 		public Normalization(int start, int end, double offset) {
 			this.start = start;
 			this.offset = offset;
-			this.width = end - start + 1;
+			this.width = end - start;
 		}
 
 	}
