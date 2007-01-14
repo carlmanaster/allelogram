@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -45,6 +46,7 @@ import org.carlmanaster.filter.Filter;
 import org.carlmanaster.predicate.Predicate;
 
 public class AllelogramApplet extends Application {
+	private static final String SETTINGS_FILE = "settings file";
 	private Settings settings;
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
@@ -55,7 +57,7 @@ public class AllelogramApplet extends Application {
 	private GenotypeComparator comparator = null;
 	private final MenuBarBuilder menuBarBuilder = new MenuBarBuilder(this);
 	private Classifier sortClassifier;
-	private final String settingsFile;
+	private String settingsFile;
 	private final String dataFile;
 	private Integer activeAllele = null;
 	private JTextArea info;
@@ -65,6 +67,20 @@ public class AllelogramApplet extends Application {
 		this.settingsFile = settingsFile;
 		this.dataFile = dataFile;
 		makeDropTargetListener();
+	}
+
+	private void recallSettingsFile() {
+		this.settingsFile = getPreferences().get(SETTINGS_FILE, null);
+		if (settingsFile != null)
+			readSettings(settingsFile);
+	}
+
+	private void rememberSettingsFile(String filename) {
+		getPreferences().put(SETTINGS_FILE, filename);
+	}
+
+	private Preferences getPreferences() {
+		return Preferences.userNodeForPackage(this.getClass());
 	}
 
 	private void makeDropTargetListener() {
@@ -116,6 +132,7 @@ public class AllelogramApplet extends Application {
 		if (file == null)
 			return;
 		try {
+			rememberSettingsFile(file.toString());
 			settings = new Settings(file);
 			comparator = new GenotypeComparator(settings.getSortClassifier());
 			menuBarBuilder.extendSortMenu();
@@ -126,6 +143,8 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void doOpen(String settingsFile, String dataFile) {
+		recallSettingsFile();
+
 		if (settings == null)
 			readSettings(settingsFile);
 		File file = FileUtil.chooseFile(dataFile);
