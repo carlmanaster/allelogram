@@ -1,0 +1,33 @@
+columns
+	Use
+	Comments
+	ID
+	SPNAME
+	Marker
+	LABID
+	instrument_ID
+	instrument_type
+	run_date
+	capillary
+	capillary_length
+	polymer
+	Call 1
+	Call 2
+	Allele 1
+	Allele 2
+classifications
+	Lab ID: LABID
+	Instrument: instrument_type.instrument_ID
+	Run: run_date
+sort
+	Run
+color
+	Lab ID
+info
+	Lab ID
+	Run
+click
+	Run
+	Lab ID
+control
+	Lab ID: 99999
