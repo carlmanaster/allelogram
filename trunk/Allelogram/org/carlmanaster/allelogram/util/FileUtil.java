@@ -12,24 +12,29 @@ import java.io.InputStreamReader;
 public class FileUtil {
 
 	public static File pickFile() {
-		FileDialog picker = new FileDialog(new Frame(), "", FileDialog.LOAD);
+		final Frame frame = new Frame();
+		FileDialog picker = new FileDialog(frame, "", FileDialog.LOAD);
 		picker.setVisible(true);
 		try {
-			File file = new File(picker.getDirectory(), picker.getFile());
-			return file;
+			return new File(picker.getDirectory(), picker.getFile());
 		} catch (RuntimeException e) {
 			return null;
+		} finally {
+			frame.dispose();
 		}
 	}
 	
 	public static File pickNewFile() {
-		FileDialog picker = new FileDialog(new Frame(), "", FileDialog.SAVE);
+		Frame frame = new Frame();
+		FileDialog picker = new FileDialog(frame, "", FileDialog.SAVE);
 		picker.setVisible(true);
 		try {
 			File file = new File(picker.getDirectory(), picker.getFile());
 			return file;
 		} catch (RuntimeException e) {
 			return null;
+		} finally {
+			frame.dispose();
 		}
 	}
 	
