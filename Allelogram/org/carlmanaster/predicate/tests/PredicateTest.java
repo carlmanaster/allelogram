@@ -17,7 +17,7 @@ public class PredicateTest extends TestCase {
 		assertTrue(all.passes(null));
 	}
 	public void testEquals() throws Exception {
-		Predicate<Integer> equals = new Equals<Integer>(new Integer(3));
+		Predicate<Integer> equals = new Equals<Integer>(3);
 		assertTrue(equals.passes(3));
 		assertFalse(equals.passes(null));
 		assertFalse(equals.passes(1));

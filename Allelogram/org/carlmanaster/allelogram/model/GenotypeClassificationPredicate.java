@@ -10,7 +10,7 @@ public class GenotypeClassificationPredicate extends Predicate<Genotype> {
 		if (classification.getColumns().size() != values.length)
 			throw new Exception("values must have the same length as classification.");
 		this.columns = columnsOf(classification);
-		this.values = values;
+		this.values = values.clone();
 	}
 
 	public GenotypeClassificationPredicate(Classifier classification, Genotype genotype) {

@@ -13,10 +13,10 @@ public class CircularListTest extends TestCase {
 		Integer[] a = new Integer[]{0,1,2,3,4};
 		List<Integer> b = Arrays.asList(a);
 		List<Integer> list = new CircularList<Integer>(b);
-		Integer zero = new Integer(0);
+		Integer zero = 0;
 		assertEquals(zero, list.get(0));
 		assertEquals(zero, list.get(5));
-		Integer four = new Integer(4);
+		Integer four = 4;
 		assertEquals(four, list.get(4));
 		assertEquals(four,list.get(24));
 	}
