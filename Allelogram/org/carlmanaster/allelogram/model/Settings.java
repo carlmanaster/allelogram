@@ -31,62 +31,62 @@ public class Settings {
 		this(FileUtil.readAll(reader));
 	}
 
-    public Settings(String s) throws Exception {
-    		ArrayList<String> lines = new ArrayList<String>();
-    		for (String line : s.split("\n"))
-    			lines.add(stripComments(line));
-    		
-    		int columnStart		= lines.indexOf("columns") + 1;
-    		int classifierStart	= lines.indexOf("classifications") + 1;
-    		int sortLine		= lines.indexOf("sort") + 1;
-    		int colorByLine		= lines.indexOf("color") + 1;
-    		int infoStart		= lines.indexOf("info") + 1;
-    		int clickStart		= lines.indexOf("click") + 1;
-    		int controlLine		= lines.indexOf("control") + 1;
-    		
-    		if (columnStart < 1)				throw new Exception("Settings must contain a 'columns' section.");
-    		if (classifierStart < columnStart)	throw new Exception("Settings must contain a 'classifications' section after the 'columns' section.");
-    		if (sortLine < classifierStart)		throw new Exception("Settings must contain a 'sort' section after the 'classifications' section.");
-    		if (colorByLine < sortLine)			throw new Exception("Settings must contain a 'color' section after the 'sort' section.");
-    		if (infoStart < colorByLine)		throw new Exception("Settings must contain an 'info' section after the 'color' section.");
-    		if (clickStart < infoStart)			throw new Exception("Settings must contain a 'click' section after the 'info' section.");
-    		if (controlLine < clickStart)		throw new Exception("Settings must contain a 'control' section after the 'click' section.");
+	public Settings(String s) throws Exception {
+		ArrayList<String> lines = new ArrayList<String>();
+		for (String line : s.split("\n"))
+			lines.add(stripComments(line));
 
-    		for (int i = columnStart; i < classifierStart - 1; ++i)
-    			columns.add(lines.get(i));
-    		
-    		for (int i = classifierStart; i < sortLine - 1; ++i)
-    			addClassifier(lines.get(i));
-    		
-    		sortClassifier		= classifiers.get(lines.get(sortLine));
-    		colorByClassifier	= classifiers.get(lines.get(colorByLine));
-    		
-    		for (int i = infoStart; i < clickStart - 1; ++i)
-    			infoClassifiers.add(classifiers.get(lines.get(i)));
-    		
-    		ArrayList<String> clicks = new ArrayList<String>();
-    		for (int i = clickStart; i < controlLine - 1; ++i)
-    			clicks.add(lines.get(i));
-    		
-    		int n = clicks.size();
-    		optionClickClassifier		= n < 1 ? null : classifiers.get(clicks.get(0));
-    		commandClickClassifier	= n < 2 ? null : classifiers.get(clicks.get(1));
-    		
-    		String[] terms = Util.splitOnColon(lines.get(controlLine));
-    		if (terms.length == 2) {
-    			controlClassifier = classifiers.get(terms[0]);
-    			controlSubject = new GenotypeClassificationPredicate(controlClassifier, controlClassifier.parse(terms[1]));
-    		} else {
-    			controlClassifier = null;
-    			controlSubject = null;
-    		}
-    		
-    		HashSet<Integer> set = new HashSet<Integer>();
-    		for (int i = 0; i < columns.size(); ++i)
-    			if (columns.get(i).toLowerCase().startsWith("allele"))
-    				set.add(i);
-    		alleleIndexes = set.toArray(new Integer[set.size()]);
-    		Arrays.sort(alleleIndexes);
+		int columnStart		= lines.indexOf("columns") + 1;
+		int classifierStart	= lines.indexOf("classifications") + 1;
+		int sortLine		= lines.indexOf("sort") + 1;
+		int colorByLine		= lines.indexOf("color") + 1;
+		int infoStart		= lines.indexOf("info") + 1;
+		int clickStart		= lines.indexOf("click") + 1;
+		int controlLine		= lines.indexOf("control") + 1;
+
+		if (columnStart < 1)				throw new Exception("Settings must contain a 'columns' section.");
+		if (classifierStart < columnStart)	throw new Exception("Settings must contain a 'classifications' section after the 'columns' section.");
+		if (sortLine < classifierStart)		throw new Exception("Settings must contain a 'sort' section after the 'classifications' section.");
+		if (colorByLine < sortLine)			throw new Exception("Settings must contain a 'color' section after the 'sort' section.");
+		if (infoStart < colorByLine)		throw new Exception("Settings must contain an 'info' section after the 'color' section.");
+		if (clickStart < infoStart)			throw new Exception("Settings must contain a 'click' section after the 'info' section.");
+		if (controlLine < clickStart)		throw new Exception("Settings must contain a 'control' section after the 'click' section.");
+
+		for (int i = columnStart; i < classifierStart - 1; ++i)
+			columns.add(lines.get(i));
+
+		for (int i = classifierStart; i < sortLine - 1; ++i)
+			addClassifier(lines.get(i));
+
+		sortClassifier		= classifiers.get(lines.get(sortLine));
+		colorByClassifier	= classifiers.get(lines.get(colorByLine));
+
+		for (int i = infoStart; i < clickStart - 1; ++i)
+			infoClassifiers.add(classifiers.get(lines.get(i)));
+
+		ArrayList<String> clicks = new ArrayList<String>();
+		for (int i = clickStart; i < controlLine - 1; ++i)
+			clicks.add(lines.get(i));
+
+		int n = clicks.size();
+		optionClickClassifier		= n < 1 ? null : classifiers.get(clicks.get(0));
+		commandClickClassifier	= n < 2 ? null : classifiers.get(clicks.get(1));
+
+		String[] terms = Util.splitOnColon(lines.get(controlLine));
+		if (terms.length == 2) {
+			controlClassifier = classifiers.get(terms[0]);
+			controlSubject = new GenotypeClassificationPredicate(controlClassifier, controlClassifier.parse(terms[1]));
+		} else {
+			controlClassifier = null;
+			controlSubject = null;
+		}
+
+		HashSet<Integer> set = new HashSet<Integer>();
+		for (int i = 0; i < columns.size(); ++i)
+			if (columns.get(i).toLowerCase().startsWith("allele"))
+				set.add(i);
+		alleleIndexes = set.toArray(new Integer[set.size()]);
+		Arrays.sort(alleleIndexes);
 	}
     
 	private void addClassifier(String string) throws Exception {
@@ -96,22 +96,22 @@ public class Settings {
 	}
 
 	public static String stripComments(String line) {
-        int commentStart = line.indexOf('!');
-        if (commentStart < 0)
-            return line.trim();
-        return line.substring(0, commentStart).trim();
-    }
+		int commentStart = line.indexOf('!');
+		if (commentStart < 0)
+			return line.trim();
+		return line.substring(0, commentStart).trim();
+	}
 
 
 	public List<String> getColumns()							{return columns;}
-	public Map<String, Classifier> getClassifiers()			{return classifiers;}
+	public Map<String, Classifier> getClassifiers()				{return classifiers;}
 	public Classifier getSortClassifier()						{return sortClassifier;}
 	public Classifier getColorByClassifier()					{return colorByClassifier;}
 	public List<Classifier> getInfoClassifiers()				{return infoClassifiers;}
 	public Classifier getOptionClickClassifier()				{return optionClickClassifier;}
 	public Classifier getCommandClickClassifier()				{return commandClickClassifier;}
 	public boolean isControlSubject(Genotype control)			{return controlSubject.passes(control);}
-	public Integer[] getAlleleIndexes()						{return alleleIndexes.clone();}
+	public Integer[] getAlleleIndexes()							{return alleleIndexes.clone();}
 	public GenotypeClassificationPredicate getControlSubject()	{return controlSubject;}
 
 	public String info(Genotype genotype) {
