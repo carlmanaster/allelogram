@@ -35,14 +35,14 @@ public class ScaleTest extends TestCase {
 		try {
 			new Scale(0, 0, 0, 100);
 			fail();
-		} catch (Exception e) {
-			assertEquals("Empty range in Scale constructor", e.getMessage());
+		} catch (IllegalArgumentException e) {
+			assertEquals("Empty X range in Scale constructor (0.0 - 0.0)", e.getMessage());
 		}
 		try {
 			new Scale(0, 1.0, 0, 0);
 			fail();
-		} catch (Exception e) {
-			assertEquals("Empty range in Scale constructor", e.getMessage());
+		} catch (IllegalArgumentException e) {
+			assertEquals("Empty N range in Scale constructor (0 - 0)", e.getMessage());
 		}
 	}
 	

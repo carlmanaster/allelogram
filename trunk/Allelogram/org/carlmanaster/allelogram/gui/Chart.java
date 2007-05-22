@@ -243,20 +243,14 @@ public class Chart extends JPanel {
 	private void makeScales() {
 		if (alleles == null)
 			return;
-		try {
-			xScale = new Scale(0, alleles.size(), 2 * AXIS_WIDTH + X_MARGIN, getWidth() - X_MARGIN);
-			fitYScaleToData();
-		} catch (Exception e) {
-		}
+		xScale = new Scale(0, alleles.size(), 2 * AXIS_WIDTH + X_MARGIN, getWidth() - X_MARGIN);
+		fitYScaleToData();
 	}
 
 	private void fitYScaleToData() {
 		if (!autoscale)
 			return;
-		try {
-			yScale = new Scale(min(), max(), getHeight() - Y_MARGIN, Y_MARGIN);
-		} catch (Exception e) {
-		}
+		yScale = new Scale(min(), max(), getHeight() - Y_MARGIN, Y_MARGIN);
 	}
 
 	public void adjustScales() {
@@ -305,16 +299,13 @@ public class Chart extends JPanel {
 	}
 
 	public void zoom(int start, int end) {
-		autoscale = start > end;
-		if (start > end) {
-			fitYScaleToData();
-		} else {
-			try {
-				yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight() - Y_MARGIN, Y_MARGIN);
-			} catch (Exception e) {
-			}
-		}
-		repaint();
+	  autoscale = start > end;
+	  if (start > end) {
+	    fitYScaleToData();
+	  } else {
+	    yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight() - Y_MARGIN, Y_MARGIN);
+	  }
+	  repaint();
 	}
 
 	public Allele alleleAt(Point point) {

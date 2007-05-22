@@ -35,7 +35,7 @@ public class FilterTest extends TestCase {
 	}
 	
 	public void testTConstructor() throws Exception {
-		Filter<Integer> one = Filter.in(new Integer(3));
+		Filter<Integer> one = Filter.in(3);
 		assertEquals(1, one.filtered(list).size());
 		one = Filter.in(3);
 		assertEquals(1, one.filtered(list).size());

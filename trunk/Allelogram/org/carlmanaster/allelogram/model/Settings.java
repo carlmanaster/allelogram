@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 import org.carlmanaster.allelogram.util.FileUtil;
 
 public class Settings {
@@ -112,7 +111,7 @@ public class Settings {
 	public Classifier getOptionClickClassifier()				{return optionClickClassifier;}
 	public Classifier getCommandClickClassifier()				{return commandClickClassifier;}
 	public boolean isControlSubject(Genotype control)			{return controlSubject.passes(control);}
-	public Integer[] getAlleleIndexes()						{return alleleIndexes;}
+	public Integer[] getAlleleIndexes()						{return alleleIndexes.clone();}
 	public GenotypeClassificationPredicate getControlSubject()	{return controlSubject;}
 
 	public String info(Genotype genotype) {
