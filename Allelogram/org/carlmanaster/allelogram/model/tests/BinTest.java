@@ -44,4 +44,8 @@ public class BinTest extends TestCase {
 		assertEquals(1.0, bin.fit(alleles.get(0)), 0.01);
 		assertEquals(0.4, bin.fit(alleles.get(1)), 0.01);
 	}
+	
+	public void testToTabDelimitedString() throws Exception {
+		assertEquals("0.0\t1.0", bin.toTabDelimitedString());
+	}
 }

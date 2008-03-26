@@ -82,6 +82,12 @@ public class GenotypeTest extends TestCase {
 		assertEquals(0.0, adjusted.get(0));
 		assertEquals(1.0, adjusted.get(1));
 	}
+	public void testExclusion() throws Exception {
+		Genotype genotype = new Genotype(new double[]{0,1});
+		assertFalse(genotype.isExcluded());
+		genotype.setExcluded(true);
+		assertTrue(genotype.isExcluded());
+	}
 
 	public static Genotype makeGenotype(String f1, String f2, String f3, double a1, double a2) throws Exception {
 		String[] keys	= new String[] {"a", "b", "c"};
@@ -89,5 +95,5 @@ public class GenotypeTest extends TestCase {
 		double[] alleles = new double[] {a1, a2};
 		return new Genotype(alleles, keys, values);
 	}
-
+	
 }

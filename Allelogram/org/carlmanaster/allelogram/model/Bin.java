@@ -40,6 +40,10 @@ public class Bin implements Comparable<Bin> {
 		return String.format("(%1.1f, %1.1f)", lo, hi);
 	}
 
+	public String toTabDelimitedString() {
+		return String.format("%1.1f\t%1.1f", lo, hi);
+	}
+	
 	public double getLow()	{return lo;}
 	public double getHigh()	{return hi;}
 
@@ -60,6 +64,5 @@ public class Bin implements Comparable<Bin> {
 	public int compareTo(Bin that) {
 		return (int) (this.lo - that.lo);
 	}
-
 
 }

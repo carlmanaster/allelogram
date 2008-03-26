@@ -37,6 +37,8 @@ public class Chart extends JPanel {
 	private boolean showingNormalization = false;
 	private final AllelogramApplet applet;
 
+	private boolean showExcludedGenotypes = true;
+
 	public Chart(AllelogramApplet applet) {
 		this.applet = applet;
 		setBackground(Color.WHITE);
@@ -208,6 +210,22 @@ public class Chart extends JPanel {
 	}
 
 	private void paintAllele(Graphics g, Allele allele, int i) {
+		if (allele.getGenotype().isExcluded())
+			paintExcludedAllele(g, allele, i);
+		else
+			paintIncludedAllele(g, allele, i);
+	}
+
+	private void paintExcludedAllele(Graphics g, Allele allele, int i) {
+		if (!showExcludedGenotypes)
+			return;
+		g.setColor(Color.RED);
+		Point p = alleleLocation(allele, i);
+		g.drawLine(p.x - 2, p.y - 2, p.x + 2, p.y + 2);
+		g.drawLine(p.x - 2, p.y + 2, p.x + 2, p.y - 2);
+	}
+
+	private void paintIncludedAllele(Graphics g, Allele allele, int i) {
 		g.setColor(colorizer.colorFor(allele));
 		Point p = alleleLocation(allele, i);
 		g.fillRect(p.x, p.y, 2, 2);
@@ -302,7 +320,7 @@ public class Chart extends JPanel {
 	  autoscale = start > end;
 	  if (start > end) {
 	    fitYScaleToData();
-	  } else {
+	  } else if (start < end) {
 	    yScale = new Scale(yScale.toData(end), yScale.toData(start), getHeight() - Y_MARGIN, Y_MARGIN);
 	  }
 	  repaint();
@@ -323,10 +341,11 @@ public class Chart extends JPanel {
 	public Allele closestAllele(int x) {
 		Allele closest = null;
 		int distance = Integer.MAX_VALUE;
-		if (alleles == null)
+		List<Allele> visibleAlleles = showExcludedGenotypes ? alleles : applet.unexcludedAlleles();
+		if (visibleAlleles == null)
 			return null;
-		for (int i = 0; i < alleles.size(); ++i) {
-			Allele allele = alleles.get(i);
+		for (int i = 0; i < visibleAlleles.size(); ++i) {
+			Allele allele = visibleAlleles.get(i);
 			Point p = alleleLocation(allele, i);
 			int d = Math.abs(p.x - x);
 			if (d < distance) {
@@ -370,5 +389,12 @@ public class Chart extends JPanel {
 		return yScale.toData(v);
 	}
 
+	public void toggleExcludedGenotypeDisplay() {
+		showExcludedGenotypes = !showExcludedGenotypes;
+	}
+
+	public boolean isShowingExcludedGenotypes() {
+		return showExcludedGenotypes;
+	}
 
 }

@@ -11,6 +11,7 @@ public class Genotype {
 	private final ArrayList<Allele> alleles = new ArrayList<Allele>();
 	private final HashMap<String, String> fields = new HashMap<String, String>();
 	private double offset;
+	private boolean excluded;
 
 	public Genotype(double[] alleles) throws Exception {
 		if (alleles == null)		throw new Exception("alleles must not be null.");
@@ -92,6 +93,14 @@ public class Genotype {
 
 	public double getOffset() {
 		return offset;
+	}
+
+	public boolean isExcluded() {
+		return excluded;
+	}
+
+	public void setExcluded(boolean excluded) {
+		this.excluded = excluded; 
 	}
 
 }

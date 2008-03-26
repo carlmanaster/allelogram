@@ -13,6 +13,7 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
@@ -213,7 +216,13 @@ public class AllelogramApplet extends Application {
 	}
 
 	private List<Genotype> findControlGenotypes() {
-		return Filter.in(settings.getControlSubject()).filtered(genotypes);
+		List<Genotype> controls = Filter.in(settings.getControlSubject()).filtered(genotypes);
+		Predicate<Genotype> excluded = new Predicate<Genotype>() {
+			public boolean passes(Genotype genotype) {
+				return genotype.isExcluded();
+			}
+		};
+	return Filter.out(excluded).filtered(controls);
 	}
 
 	private void makeAlleles() {
@@ -232,10 +241,19 @@ public class AllelogramApplet extends Application {
 	}
 
 	public void doGuess() {
-		List<Bin> list = new BinGuesser(alleles).bestGuess();
+		List<Bin> list = new BinGuesser(unexcludedAlleles()).bestGuess();
 		setBins(list);
 	}
 	
+	public List<Allele> unexcludedAlleles() {
+		Predicate<Allele> excluded = new Predicate<Allele>() {
+			public boolean passes(Allele allele) {
+				return allele.getGenotype().isExcluded();
+			}
+		};
+		return Filter.out(excluded).filtered(alleles);
+	}
+
 	public void doGuessBySize() {
 		String s = JOptionPane.showInputDialog("Size?");
 		if (s == null)
@@ -319,23 +337,41 @@ public class AllelogramApplet extends Application {
 	}
 	
 	public void selectNextAllele() {
-		selectAllele(alleles.get(nextAlleleIndex()), false, false);
+		selectAllele(alleles.get(nextActiveAlleleIndex()), false, false);
 	}
 	
-	private int nextAlleleIndex() {
-		if (activeAllele == null)				return 0;
-		if (activeAllele == alleles.size() - 1)	return 0;
-		return activeAllele + 1;
+	private int nextActiveAlleleIndex() {
+		if (chart.isShowingExcludedGenotypes())
+			return nextAlleleIndex(activeAllele);
+		int index = nextAlleleIndex(activeAllele);
+		while (alleles.get(index).getGenotype().isExcluded())
+			index = nextAlleleIndex(index);
+		return index;
+	}
+
+	private int nextAlleleIndex(Integer index) {
+		if (index == null)				return 0;
+		if (index == alleles.size() - 1)	return 0;
+		return index + 1;
 	}
 
 	public void selectPreviousAllele() {
-		selectAllele(alleles.get(previousAlleleIndex()), false, false);
+		selectAllele(alleles.get(previousActiveAlleleIndex()), false, false);
 	}
 	
-	private int previousAlleleIndex() {
-		if (activeAllele == null)	return alleles.size() - 1;
-		if (activeAllele == 0)		return alleles.size() - 1;
-		return activeAllele - 1;
+	private int previousActiveAlleleIndex() {
+		if (chart.isShowingExcludedGenotypes())
+			return previousAlleleIndex(activeAllele);
+		int index = previousAlleleIndex(activeAllele);
+		while (alleles.get(index).getGenotype().isExcluded())
+			index = previousAlleleIndex(index);
+		return index;
+	}
+
+	private int previousAlleleIndex(Integer index) {
+		if (index == null)	return alleles.size() - 1;
+		if (index == 0)		return alleles.size() - 1;
+		return index - 1;
 	}
 
 	public void selectGenotype(Genotype genotype, boolean commandKey,
@@ -470,12 +506,13 @@ public class AllelogramApplet extends Application {
 	}
 
 	private class DropListener extends DropTargetAdapter {
+		@SuppressWarnings("unchecked")
 		public void drop(DropTargetDropEvent event) {
 			try {
 				DataFlavor flavor = event.getCurrentDataFlavors()[0];
 				if (DataFlavor.javaFileListFlavor.equals(flavor)) {
 					event.acceptDrop(DnDConstants.ACTION_REFERENCE);
-					List list = (List) event.getTransferable().getTransferData(flavor);
+					List<File> list = (List<File>) event.getTransferable().getTransferData(flavor);
 					File file = (File) list.get(0);
 					doOpen(null, file.getAbsolutePath());
 					event.dropComplete(true);
@@ -526,6 +563,70 @@ public class AllelogramApplet extends Application {
 		Classifier sort = getSortClassifier();
 		GenotypeClassificationPredicate predicate = new GenotypeClassificationPredicate(sort, genotype);
 		return (Filter.in(predicate).filtered(genotypes));
+	}
+
+	public void saveBins() {
+		File file = FileUtil.pickNewFile();
+		if (file == null)
+			return;
+
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(file.getAbsolutePath()));
+			out.println("Bin\tLow\tHigh");
+			SortedSet<String> keys = new TreeSet<String>(bins.keySet());
+			for (String key : keys)
+				out.println(key + "\t" + bins.get(key).toTabDelimitedString());
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void applyBins() {
+		File file = FileUtil.pickFile();
+		if (file == null) return;
+		try {
+			List<Bin> newBins = new ArrayList<Bin>();
+			BufferedReader reader = FileUtil.makeReader(file);
+			reader.readLine();	// skip the header row
+			while (reader.ready()) {
+				String[] items = reader.readLine().split("\t");
+				newBins.add(new Bin(Double.parseDouble(items[1]), Double.parseDouble(items[2])));
+			}
+			setBins(newBins);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void excludeGenotype() {
+		boolean excluded = anySelectedGenotypesAreIncluded();
+		for (Genotype genotype : selection) 
+			genotype.setExcluded(excluded);
+		if (excluded && !chart.isShowingExcludedGenotypes())
+			selection.clear();
+		repaint();
+	}
+
+	private boolean anySelectedGenotypesAreIncluded() {
+		for (Genotype genotype : selection) 
+			if (!genotype.isExcluded())
+				return true;
+		return false;
+	}
+
+	private boolean anySelectedGenotypesAreExcluded() {
+		for (Genotype genotype : selection) 
+			if (genotype.isExcluded())
+				return true;
+		return false;
+	}
+
+	public void showExcludedGenotypes() {
+		chart.toggleExcludedGenotypeDisplay();
+		if (!chart.isShowingExcludedGenotypes() && anySelectedGenotypesAreExcluded())
+			selection.clear();
+		repaint();
 	}
 
 }
