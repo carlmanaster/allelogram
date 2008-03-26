@@ -24,10 +24,36 @@ public class MenuBarBuilder {
 
 	public void buildMenuBar() {
 		menubar.add(buildFileMenu());
+		menubar.add(buildGenotypeMenu());
 		menubar.add(buildBinMenu());
 		menubar.add(buildNormalizeMenu());
 		menubar.add(buildSortMenu());
 		menubar.add(buildColorMenu());
+	}
+
+	/*
+	 * exclude genotype
+	 * -------
+	 * show excluded genotypes
+	 */
+	private Menu buildGenotypeMenu() {
+		MenuItem exclude = new MenuItem("Exclude Genotype");
+		exclude.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.excludeGenotype();
+			}
+		});
+		MenuItem show = new MenuItem("Show Excluded Genotypes");
+		show.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.showExcludedGenotypes();
+			}
+		});
+		Menu menu = makeMenu("Genotypes");
+		menu.add(exclude);
+		menu.addSeparator();
+		menu.add(show);
+		return menu;
 	}
 
 	/*
@@ -37,8 +63,6 @@ public class MenuBarBuilder {
 	 * save (S)
 	 * save as...
 	 * revert
-	 * -------
-	 * save bins...
 	 * -------
 	 * pick file format...
 	 * -------
@@ -97,12 +121,14 @@ public class MenuBarBuilder {
 	 * guess (G)
 	 * guess using size
 	 * ---------
-	 * add bin above
-	 * add bin below
-	 * delete bin
-	 * ---------
 	 * clear bins
-	 * 
+	 * ---------
+	 * Name bins by size
+	 * Name bins by letter
+	 * Name bins by index
+	 * ---------
+	 * apply bins...
+	 * save bins...
 	 */
 	private Menu buildBinMenu() {
 		MenuItem guess = new MenuItem("Guess Bins");
@@ -146,6 +172,20 @@ public class MenuBarBuilder {
 			}
 		});
 
+		MenuItem save = new MenuItem("Save Bins As...");
+		save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.saveBins();
+			}
+		});
+
+		MenuItem apply = new MenuItem("Apply Saved Bins");
+		apply.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				applet.applyBins();
+			}
+		});
+
 		Menu menu = makeMenu("Bin");
 		menu.add(guess);
 		menu.add(guessBySize);
@@ -155,6 +195,9 @@ public class MenuBarBuilder {
 		menu.add(bySize);
 		menu.add(byLetter);
 		menu.add(byIndex);
+		menu.addSeparator();
+		menu.add(save);
+		menu.add(apply);
 		
 		return menu;
 	}
