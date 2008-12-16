@@ -12,7 +12,7 @@ import org.carlmanaster.allelogram.util.FileUtil;
 public class GenotypeReader {
 	private final List<String> columns;
 	private final Integer[] alleleIndexes;
-	
+
 	public GenotypeReader(Settings settings) {
 		columns = settings.getColumns();
 		alleleIndexes = settings.getAlleleIndexes();
@@ -26,8 +26,12 @@ public class GenotypeReader {
 		ArrayList<Genotype> genotypes = new ArrayList<Genotype>();
 		while (reader.ready()) {
 			Genotype genotype = makeGenotype(reader.readLine());
-			if (genotype != null) 
+			if (genotype != null) {
+				final String use = genotype.get("Use");
+				if (use != null && use.equals("FALSE"))
+					genotype.setExcluded(true); //Added 2008-10-29 for excluding newly read in genotypes with "FALSE" in Use column
 				genotypes.add(genotype);
+			}
 		}
 		reader.close();
 		return genotypes;
@@ -46,21 +50,21 @@ public class GenotypeReader {
 		for (int i = 0; i < split.length; ++i)
 			items[i] = split[i];
 		double[] alleles = new double[alleleIndexes.length];
-		
+
 		alleles[0] = parseDouble(items[alleleIndexes[0]], -1.0);
 		if (alleles[0] < 0)
 			return null;
-		
+
 		for (int i = 1; i < alleleIndexes.length; ++i)
 			alleles[i] = parseDouble(items[alleleIndexes[i]], alleles[0]);
-		
+
 		try {
 			return new Genotype(alleles, columns, items);
 		} catch (Exception e) {
 			return null;
 		}
 	}
-	
+
 	private static double parseDouble(String s, double defaultValue) {
 		try {
 			return Double.parseDouble(s);

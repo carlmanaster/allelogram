@@ -53,7 +53,7 @@ public class AllelogramApplet extends Application {
 	private Settings settings;
 	private List<Genotype> genotypes;
 	private final List<Allele> alleles = new ArrayList<Allele>();
-	
+
 	private Map<String, Bin> bins = new HashMap<String, Bin>();
 	private final HashSet<Genotype> selection = new HashSet<Genotype>();
 	private final Chart chart = new Chart(this);
@@ -93,24 +93,29 @@ public class AllelogramApplet extends Application {
 	public void init() {
 		super.init();
 		setPreferredSize(new Dimension(700, 400));
-		
+
 		info = new JTextArea();
 		info.setEditable(false);
 		info.setPreferredSize(new Dimension(700, 40));
 		info.setMaximumSize(new Dimension(700, 40));
 		info.setMinimumSize(new Dimension(100, 40));
 		info.setFocusable(false);
-		
+
 		AllelogramMouseDispatcher mouseDispatcher = new AllelogramMouseDispatcher(this, chart);
 		chart.addMouseListener(mouseDispatcher);
 		chart.addMouseMotionListener(mouseDispatcher);
+		invokeWindowsWorkaroundForKeyListener();
 		addKeyListener(new ArrowKeyListener());
 
 		Container frame = getContentPane();
 		frame.setLayout(new Layout());
-		
+
 		frame.add(chart);
 		frame.add(info);
+	}
+
+	private void invokeWindowsWorkaroundForKeyListener() {
+		setFocusable(true);
 	}
 
 	public void paint(Graphics g) {
@@ -166,31 +171,31 @@ public class AllelogramApplet extends Application {
 		} catch (IOException e) {
 		}
 	}
-	
+
 
 	public void doSaveAs() {
 		File file = FileUtil.pickNewFile();
 		if (file == null)
 			return;
-		
+
 		try {
 			PrintWriter out = new PrintWriter(new FileWriter(file.getAbsolutePath()));
 
 			for (String column : settings.getColumns())
 				out.print(column + '\t');
-			
+
 			int ploidy = settings.getAlleleIndexes().length;
 			for (int i = 0; i < ploidy; ++i)
 				out.print("Normalized Size " + (i + 1) + '\t');
 			for (int i = 0; i < ploidy; ++i)
 				out.print("Call " + (i + 1) + '\t');
-			
+
 			out.println();
-			
+
 			for (Genotype genotype : genotypes) {
 				for (String column : settings.getColumns())
 					out.print(genotype.get(column) + '\t');
-				
+
 				List<Double> values = genotype.getAdjustedAlleleValues(ploidy);
 				for (Double value : values)
 					out.print(String.format("%.2f\t", value));
@@ -199,13 +204,13 @@ public class AllelogramApplet extends Application {
 
 				out.println();
 			}
-			
+
 			out.close();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private String call(Double value) {
@@ -244,7 +249,7 @@ public class AllelogramApplet extends Application {
 		List<Bin> list = new BinGuesser(unexcludedAlleles()).bestGuess();
 		setBins(list);
 	}
-	
+
 	public List<Allele> unexcludedAlleles() {
 		Predicate<Allele> excluded = new Predicate<Allele>() {
 			public boolean passes(Allele allele) {
@@ -278,7 +283,7 @@ public class AllelogramApplet extends Application {
 		bins.clear();
 		for (int i = 0; i < list.size(); ++i)
 			bins.put(binNamer.getName(list.get(i), i), list.get(i));
-		
+
 		chart.setBins(bins);
 		repaint();
 	}
@@ -302,7 +307,7 @@ public class AllelogramApplet extends Application {
 	private int getInfoHeight() {
 		return settings == null ? 24 : (1 + settings.getInfoClassifiers().size()) * info.getFontMetrics(info.getFont()).getHeight();
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
@@ -335,11 +340,11 @@ public class AllelogramApplet extends Application {
 		selectGenotype(allele.getGenotype(), commandKey, optionKey);
 		activeAllele = alleles.indexOf(allele);
 	}
-	
+
 	public void selectNextAllele() {
 		selectAllele(alleles.get(nextActiveAlleleIndex()), false, false);
 	}
-	
+
 	private int nextActiveAlleleIndex() {
 		if (chart.isShowingExcludedGenotypes())
 			return nextAlleleIndex(activeAllele);
@@ -358,7 +363,7 @@ public class AllelogramApplet extends Application {
 	public void selectPreviousAllele() {
 		selectAllele(alleles.get(previousActiveAlleleIndex()), false, false);
 	}
-	
+
 	private int previousActiveAlleleIndex() {
 		if (chart.isShowingExcludedGenotypes())
 			return previousAlleleIndex(activeAllele);
@@ -386,7 +391,7 @@ public class AllelogramApplet extends Application {
 			selectMatching(genotype, classification);
 			return;
 		}
-		
+
 		select(genotype);
 	}
 
@@ -513,7 +518,7 @@ public class AllelogramApplet extends Application {
 				if (DataFlavor.javaFileListFlavor.equals(flavor)) {
 					event.acceptDrop(DnDConstants.ACTION_REFERENCE);
 					List<File> list = (List<File>) event.getTransferable().getTransferData(flavor);
-					File file = (File) list.get(0);
+					File file = list.get(0);
 					doOpen(null, file.getAbsolutePath());
 					event.dropComplete(true);
 				}
@@ -528,6 +533,8 @@ public class AllelogramApplet extends Application {
 	private class ArrowKeyListener extends KeyAdapter {
 		public void keyPressed(KeyEvent e) {
 			if (!e.isActionKey()) return;
+			//showInfo(Integer.toString(e.getKeyCode()));
+			//JOptionPane.showMessageDialog(null,Integer.toString(e.getKeyCode()),"Test",JOptionPane.INFORMATION_MESSAGE);
 			switch (e.getKeyCode()) {
 				case KeyEvent.VK_LEFT:	selectPreviousAllele();	break;
 				case KeyEvent.VK_RIGHT:	selectNextAllele();		break;
@@ -543,7 +550,7 @@ public class AllelogramApplet extends Application {
 
 			chart.setSize(size);
 			chart.setLocation(0, 0);
-			
+
 			size.height = infoHeight;
 			info.setSize(size);
 			info.setLocation(0, chart.getHeight());
@@ -601,7 +608,7 @@ public class AllelogramApplet extends Application {
 
 	public void excludeGenotype() {
 		boolean excluded = anySelectedGenotypesAreIncluded();
-		for (Genotype genotype : selection) 
+		for (Genotype genotype : selection)
 			genotype.setExcluded(excluded);
 		if (excluded && !chart.isShowingExcludedGenotypes())
 			selection.clear();
@@ -609,14 +616,14 @@ public class AllelogramApplet extends Application {
 	}
 
 	private boolean anySelectedGenotypesAreIncluded() {
-		for (Genotype genotype : selection) 
+		for (Genotype genotype : selection)
 			if (!genotype.isExcluded())
 				return true;
 		return false;
 	}
 
 	private boolean anySelectedGenotypesAreExcluded() {
-		for (Genotype genotype : selection) 
+		for (Genotype genotype : selection)
 			if (genotype.isExcluded())
 				return true;
 		return false;
@@ -630,4 +637,3 @@ public class AllelogramApplet extends Application {
 	}
 
 }
- 

@@ -101,6 +101,10 @@ public class Genotype {
 
 	public void setExcluded(boolean excluded) {
 		this.excluded = excluded; 
+		if (excluded)
+			fields.put("Use", "FALSE");
+		else
+			fields.put("Use", "TRUE");				
 	}
 
 }

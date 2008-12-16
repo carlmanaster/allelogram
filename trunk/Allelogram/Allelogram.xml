@@ -1,9 +1,10 @@
 <project name="Allelogram" basedir="." default="buildJar">
 
 	<property name="deploy" value="deploy" />
-	<property name="build" value="deploy/build" />
+	<property name="junit" value="/Applications/eclipse/plugins/org.junit_3.8.2.v200706111738/junit.jar" />
+	<property name="build" value="${deploy}/build" />
 	<property name="src" value="." />
-	<property name="report" value="deploy/reports" />
+	<property name="report" value="${deploy}/reports" />
 	<target name="compile">
 		<property name="compilefiles" value="org/carlmanaster/allelogram/gui/AllelogramApplet.java" />
 		<mkdir dir="${build}" />
@@ -11,7 +12,7 @@
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
-	<target name="buildJar" depends="runTests">
+	<target name="buildJar" depends="runTests" >
 		<jar destfile="${deploy}/allelogram.jar" basedir="${build}" includes="org/**" excludes="**/tests/**">
 			<manifest>
 				<attribute name="Main-Class" value="org.carlmanaster.allelogram.gui.AllelogramApplet" />
@@ -33,6 +34,7 @@
 		<junit printsummary="no" haltonfailure="no" haltonerror="no" showoutput="no" fork="yes">
 			<classpath>
 				<pathelement path="${build}" />
+				<pathelement path="${junit}" />
 				<pathelement path="${src}" />
 			</classpath>
 			<formatter type="xml" />
