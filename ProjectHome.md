@@ -1,0 +1,3 @@
+Allelogram is a program for normalizing and binning microsatellite genotypes.  I wrote the first version at Sequana Therapeutics; that one was integrated into our LIMS and used a Sybase database.  Later I wrote one in C++ on (Classic) Mac OS that works from text files.  This version is like the second version, working from text files, and has substantially the same feature set.  It's written in Java to support Mac OSX and other platforms, notably Windows.
+
+Version 2.2 was released on January 9, 2009.
